@@ -1,4 +1,4 @@
-# LS_Explorer
+# LS_Workshop
 
  The overall system is called **Exploratory Semi-Supervised Machine Learning** (ESS-ML). It is composed of following pipeline to analyze datasets in terms of its latent (or hidden) space, thus revealing relationships useful to understanding and utilizing the data. 
 ![ESS-ML Pipeline](docs/images/ESS-ML-Pipeline.png)
