@@ -1,3 +1,4 @@
+#if UNITY_2018_2_OR_NEWER
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Build;
@@ -52,3 +53,4 @@ public class OVRShaderBuildProcessor : IPreprocessShaders
 		}
 	}
 }
+#endif

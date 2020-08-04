@@ -1,2 +1,0 @@
-plotName,plotFiles,plotSamples,plotDimensions,plotImageHeight,plotImageWidth
-simple VAE model on MNIST with 8 dim,vae-mnist_D9,1000,8,28,28
