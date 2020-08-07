@@ -52,5 +52,9 @@
         "ProjectSettings/":true,
         "temp/":true,
         "Temp/":true
-    }
+    },
+    "printcode.paperSize": "letter",
+    "printcode.tabSize": 4,
+    "printcode.browserPath": "C:\\\"Program Files\"\\\"Mozilla Firefox\"\\firefox.exe",
+    "printcode.disableTelemetry": true
 }
