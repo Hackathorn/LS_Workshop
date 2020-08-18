@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7825802943817033453
+--- !u!114 &-8782924377323377421
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,28 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d236b7d11115f2143951f1e14045df39, type: 3}
-  m_Name: Android Settings
+  m_Name: Standalone Settings
   m_EditorClassIdentifier: 
-  m_LoaderManagerInstance: {fileID: -5925020705449540072}
+  m_LoaderManagerInstance: {fileID: -6781224015590893799}
   m_InitManagerOnStart: 1
---- !u!114 &-5925020705449540072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4c3631f5e58749a59194e0cf6baf6d5, type: 3}
-  m_Name: Android Providers
-  m_EditorClassIdentifier: 
-  m_RequiresSettingsUpdate: 0
-  m_AutomaticLoading: 0
-  m_AutomaticRunning: 0
-  m_Loaders:
-  - {fileID: 11400000, guid: 790dea0bb26eebe4b975ed4b5df55b6e, type: 2}
---- !u!114 &-3098830946306820357
+--- !u!114 &-6781224015590893799
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,7 +30,7 @@ MonoBehaviour:
   m_AutomaticLoading: 0
   m_AutomaticRunning: 0
   m_Loaders:
-  - {fileID: 11400000, guid: 790dea0bb26eebe4b975ed4b5df55b6e, type: 2}
+  - {fileID: 11400000, guid: 2ae80167a81a4ba448071177a2eecb45, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,9 +45,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Keys: 0700000001000000
   Values:
-  - {fileID: -7825802943817033453}
-  - {fileID: 1181605115858402707}
---- !u!114 &1181605115858402707
+  - {fileID: 1399857464495893649}
+  - {fileID: -8782924377323377421}
+--- !u!114 &1061799687750001390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c3631f5e58749a59194e0cf6baf6d5, type: 3}
+  m_Name: Android Providers
+  m_EditorClassIdentifier: 
+  m_RequiresSettingsUpdate: 0
+  m_AutomaticLoading: 0
+  m_AutomaticRunning: 0
+  m_Loaders:
+  - {fileID: 11400000, guid: 2ae80167a81a4ba448071177a2eecb45, type: 2}
+--- !u!114 &1399857464495893649
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d236b7d11115f2143951f1e14045df39, type: 3}
-  m_Name: Standalone Settings
+  m_Name: Android Settings
   m_EditorClassIdentifier: 
-  m_LoaderManagerInstance: {fileID: -3098830946306820357}
+  m_LoaderManagerInstance: {fileID: 1061799687750001390}
   m_InitManagerOnStart: 1

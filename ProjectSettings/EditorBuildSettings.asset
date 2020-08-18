@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/LS_Workshop/Scenes/LS_Workshop1.unity
-    guid: 63277c6842ca7e94f92cc99649d71980
+    path: Assets/LS_Workshop/Scenes/LSWorkshopScene2.unity
+    guid: bcfde8e176c4f664cb82d9bbd765de25
   m_configObjects:
-    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 20be1446154f06a4a9dc2038d36c363d,
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 27f54e7d920e9a2428249089cb37ed3e,
       type: 2}
-    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: d0be2d9d7cce80243bededece83ac14c,
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: ac8a8e54a58ee0b48a459d356949fd31,
       type: 2}

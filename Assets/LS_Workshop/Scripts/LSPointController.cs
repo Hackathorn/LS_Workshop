@@ -41,7 +41,7 @@ public class LSPointController : MonoBehaviour
     private void RefreshPoints()
     {
         // find public parameters in LSpaceController
-        GameObject _go = GameObject.Find("LSpaceWorkshop");
+        GameObject _go = GameObject.Find("LSWorkshop");
         LSpaceController _scr = _go.GetComponent<LSpaceController>();
 
         // set _ parameters for this point

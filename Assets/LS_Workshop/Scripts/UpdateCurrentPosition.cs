@@ -17,16 +17,16 @@ public class UpdateCurrentPosition : MonoBehaviour
 
     void Update()
     {
-        GameObject _go = GameObject.Find("LSpaceWorkshop");
+        GameObject _go = GameObject.Find("LSWorkshop");
         LSpaceController _scr = _go.GetComponent<LSpaceController>();
         float _PlotScale = _scr.PlotScale;
         float _PointScale = _scr.PointScale;
         bool _Variance = _scr.Variance; 
 
         Vector3 pos = PlayerController.transform.position;
-        Xvalue.text = (pos.x  / -_PlotScale).ToString("F4");
-        Yvalue.text = (pos.y  / -_PlotScale).ToString("F4");
-        Zvalue.text = (pos.z  / -_PlotScale).ToString("F4");
+        Xvalue.text = (pos.x  / _PlotScale).ToString("F4");
+        Yvalue.text = (pos.y  / _PlotScale).ToString("F4");
+        Zvalue.text = (pos.z  / _PlotScale).ToString("F4");
 
         PlotScaleValue.text = "Plot Scale " + _PlotScale.ToString("F2");
         PointScaleValue.text = "Point Scale " + _PointScale.ToString("F2");

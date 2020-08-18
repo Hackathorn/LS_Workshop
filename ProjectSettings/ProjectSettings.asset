@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 20
-  productGUID: 23e0e8fe3380f94469e88e3a3715bbf5
+  productGUID: 3072346c13b204b48b506e788897d7e2
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: BolderTech
-  productName: LS_Workshop
+  companyName: BolderTec
+  productName: LS_Workshop7
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -47,7 +47,7 @@ PlayerSettings:
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
   m_StereoRenderingPath: 0
-  m_ActiveColorSpace: 1
+  m_ActiveColorSpace: 0
   m_MTRendering: 1
   m_StackTraceTypes: 010000000100000001000000010000000100000001000000
   iosShowActivityIndicatorOnLoading: -1
@@ -125,9 +125,7 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleVersion: 0.2
-  preloadedAssets:
-  - {fileID: -7825802943817033453, guid: d0be2d9d7cce80243bededece83ac14c, type: 2}
-  - {fileID: 11400000, guid: 20be1446154f06a4a9dc2038d36c363d, type: 2}
+  preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -170,7 +168,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.BolderTech.LS_Workshop7c
+    Android: com.BolderTec.LS_Workshop7_4
   buildNumber: {}
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 23
