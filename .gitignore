@@ -43,6 +43,7 @@ ExportedObj/
 *.opendb
 *.VC.db
 
+# too large; will need github large storage
 *.cubemap
 
 # Unity3D generated meta files

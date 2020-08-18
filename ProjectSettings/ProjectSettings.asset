@@ -168,7 +168,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.BolderTec.LS_Workshop7_4
+    Android: com.BolderTec.LS_Workshop7_5
   buildNumber: {}
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 23
