@@ -328,7 +328,7 @@ GameObject:
   - component: {fileID: 1559538603425215838}
   - component: {fileID: 1559538603425215833}
   m_Layer: 0
-  m_Name: ZeroCube
+  m_Name: ZeroCubeBig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -343,7 +343,7 @@ Transform:
   m_GameObject: {fileID: 1559538603425215836}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children: []
   m_Father: {fileID: 1559538602556670060}
   m_RootOrder: 0
@@ -420,7 +420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f74618519b266214bb575792c9fbe3fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 4
+  duration: 2
 --- !u!1 &1559538603442627992
 GameObject:
   m_ObjectHideFlags: 0

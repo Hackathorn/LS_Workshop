@@ -133,7 +133,7 @@ public class DebugUIBuilder : MonoBehaviour
   {
     Relayout();
     gameObject.SetActive(true);
-    transform.position = rig.transform.TransformPoint(menuOffset);
+    // transform.position = rig.transform.TransformPoint(menuOffset);  // <<<<<COMMENTED>>>>>
     Vector3 newEulerRot = rig.transform.rotation.eulerAngles;
     newEulerRot.x = 0.0f;
     newEulerRot.z = 0.0f;
