@@ -28,10 +28,12 @@ public class LSpaceController : MonoBehaviour
 
 	//****** define get/set properties for PlotParms to emit PlotChange events
 	private float _PlotScale = 10f;
+
+	// PlotScale scales the LS mean/std value into World space for cube dimensions (1m, 10m...). That cube contains the entire Latent Space.
 	public float PlotScale 
 	{
 		get {return _PlotScale; }
-		set {_PlotScale = (float) Math.Pow(10f, value); 
+		set {_PlotScale = (float) Math.Pow(10f, value - 1f);  // multiply LS values by PlotScale for World space position/scale
 			Debug.Log("Plot Scale = " + _PlotScale);
 			onPlotChange(); }
 	} 

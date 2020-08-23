@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LSPlatformController : MonoBehaviour
 {
@@ -8,21 +9,37 @@ public class LSPlatformController : MonoBehaviour
     //ref: https://docs.unity3d.com/ScriptReference/Vector3.Lerp.html
     //ref: 
     [Tooltip("Number of frames to complete platform movement")]
-    public int totalFrames = 40;
+    public int totalFrames = 20;
     // public float duration = 1.0f;
+
+    public GameObject LSZeroAxes;
+    public Text XTextValue;
+    public Text YTextValue;
+    public Text ZTextValue;
+
     private bool isLerping; 
     private int currentFrame;
     private Vector3 startPos, endPos;
 
     void Start() {
         isLerping = false;
+        LSpaceController.onPlotChange += RefreshAxes;
     }
+    // Remove listener from onPlotChange when point is destroyed
+
+    private void OnDisable() {
+        LSpaceController.onPlotChange -= RefreshAxes;
+    }
+
     void Update()
     {
         if (!isLerping) {
-            Debug.Log("Input???? Pos = " + transform.position);
+            // Debug.Log("Input???? Pos = " + transform.position);
             Vector3 newDelta = Vector3.zero; 
 
+            if(OVRInput.GetDown(OVRInput.Button.Three)) {           // return to Zero Axes
+                newDelta = -1f * transform.position + Vector3.left;
+            }
             // if(OVRInput.GetDown(OVRInput.Button.Three)) {    // Button X
             //     Debug.Log("BUTTON Three +1");
             //     newDelta += new Vector3(0,+1,0); }
@@ -62,7 +79,7 @@ public class LSPlatformController : MonoBehaviour
             // }
             
             if (newDelta != Vector3.zero) {     //start LERPing cycles
-                Debug.Log("LERPing started " + newDelta);
+                // Debug.Log("LERPing started " + newDelta);
                 isLerping = true;
                 currentFrame = 0;
                 startPos = transform.position;
@@ -78,5 +95,27 @@ public class LSPlatformController : MonoBehaviour
                 isLerping = false;
                 }
             }
+        
+        // update X-Y-Z position texts 
+        GameObject _go = GameObject.Find("LSWorkshop");
+        LSpaceController _scr = _go.GetComponent<LSpaceController>();
+        float _PlotScale = _scr.PlotScale;
+
+        Vector3 pos = transform.position;
+        XTextValue.text = "X  " + ((pos.x + 1) / _PlotScale).ToString("F5");  // adjust X to front of platform
+        YTextValue.text = "Y  " + (pos.y  / _PlotScale).ToString("F5");
+        ZTextValue.text = "Z  " + (pos.z  / _PlotScale).ToString("F5");
+
     }
+
+    // Refresh this point by getting current plot parms and setting pos & scale
+    private void RefreshAxes()
+    {
+        // find public parameters in LSpaceController
+        GameObject _go = GameObject.Find("LSWorkshop");
+        LSpaceController _scr = _go.GetComponent<LSpaceController>();
+        // Debug.Log("REFRESH AXES PlotScale = " + _scr.PlotScale);
+        LSZeroAxes.transform.localScale = Vector3.one * _scr.PlotScale / 10f;
+    }
+
 }

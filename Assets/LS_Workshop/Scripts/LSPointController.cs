@@ -62,13 +62,11 @@ public class LSPointController : MonoBehaviour
 
         // calculate new scale for this point
         Vector3 scale = new Vector3(1,1,1) * _PointScale;
-        if (_Variance) 
-        {
-            float xStd = Convert.ToSingle(_LSPointStd[_BaseX]) * _PlotScale; //rescale to WorldSpace
-            float yStd = Convert.ToSingle(_LSPointStd[_VertY]) * _PlotScale;
-            float zStd = Convert.ToSingle(_LSPointStd[_BaseZ]) * _PlotScale;
-            scale = new Vector3 (xStd, yStd, zStd) * _PointScale;
-        }
+        float xStd = Convert.ToSingle(_LSPointStd[_BaseX]) * _PlotScale; //rescale to WorldSpace
+        float yStd = Convert.ToSingle(_LSPointStd[_VertY]) * _PlotScale;
+        float zStd = Convert.ToSingle(_LSPointStd[_BaseZ]) * _PlotScale;
+        scale = new Vector3 (xStd, yStd, zStd) * _PointScale;
+
         transform.localScale = scale; 
 
         // Sets color according to x/y/z value
