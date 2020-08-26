@@ -5,20 +5,23 @@ using LSpacesProject;
 
 public class LSPointSelector : MonoBehaviour
 {
-    [SerializeField] private Material highlightMaterial;
+    public Vector3 rayOrigin;
+    public Vector3 rayDirection; 
+    // [SerializeField] private Material highlightMaterial;
     
-    void Update()
+    void FixedUpdate()
     {
         // var ray = Vector3.zero; // = OVRPlayerController.main.ScreenPointToRay...
-        // RaycastHit hit;
-        // if (Physics.Raycast(ray, out hit))
-        // {
-        //     var selection = hit.transform;
-        //     var selectionRenderer = selection.GetComponent<Renderer>();
-        //     if (selectionRenderer != null)
-        //     {
-        //         selectionRenderer.material = highlightMaterial;
-        //     }
-        // }
+        RaycastHit hit;
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit))
+        {
+            Debug.Log("Found point " + hit.transform.name + "at distance " + hit.distance);
+            // var selection = hit.transform;
+            // var selectionRenderer = selection.GetComponent<Renderer>();
+            // if (selectionRenderer != null)
+            // {
+            //     selectionRenderer.material = highlightMaterial;
+            // }
+        }
     }
 }
