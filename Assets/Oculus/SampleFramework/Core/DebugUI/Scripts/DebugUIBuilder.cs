@@ -308,18 +308,18 @@ public class DebugUIBuilder : MonoBehaviour
     return rt;
   }
 
-  public void ToggleLaserPointer(bool isOn)
-  {
-    if (lp)
-    {
-      if (isOn)
-      {
-        lp.enabled = true;
-      }
-      else
-      {
-        lp.enabled = false;
-      }
-    }
-  }
+  // public void ToggleLaserPointer(bool isOn)  // no external references ???
+  // {
+  //   if (lp)
+  //   {
+  //     if (isOn)
+  //     {
+  //       lp.enabled = true;
+  //     }
+  //     else
+  //     {
+  //       lp.enabled = false;
+  //     }
+  //   }
+  // }
 }

@@ -3,7 +3,7 @@
 Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.  
 
 See SampleFramework license.txt for license terms.  Unless required by applicable law 
-or agreed to in writing, the sample code is provided “AS IS” WITHOUT WARRANTIES OR 
+or agreed to in writing, the sample code is provided ï¿½AS ISï¿½ WITHOUT WARRANTIES OR 
 CONDITIONS OF ANY KIND, either express or implied.  See the license for specific 
 language governing permissions and limitations under the license.
 
@@ -113,6 +113,8 @@ public class LaserPointer : OVRCursor
         {
             lineRenderer.SetPosition(0, start);
             lineRenderer.SetPosition(1, end);
+            raycastHitInfo(start, end);
+
         }
         else if (laserBeamBehavior == LaserBeamBehavior.OnWhenHitTarget)
         {
@@ -123,6 +125,7 @@ public class LaserPointer : OVRCursor
                     lineRenderer.enabled = true;
                     lineRenderer.SetPosition(0, start);
                     lineRenderer.SetPosition(1, end);
+                    raycastHitInfo(start, end);
                 }
             }
             else
@@ -135,6 +138,18 @@ public class LaserPointer : OVRCursor
         }
     }
 
+    // addition to retrieve info on LS Points hit
+    private void raycastHitInfo(Vector3 rayStart, Vector3 rayEnd)
+    {
+        RaycastHit hit;
+        Vector3 rayDirection = rayEnd - rayStart; 
+        Debug.Log("HIT - looking...");
+        if (Physics.Raycast(rayStart, rayDirection, out hit))
+        {
+            Debug.Log("HIT - Found point " + hit.transform.name + " at distance " + hit.distance);
+        }
+
+    }
     void OnDisable()
     {
         if (cursorVisual) cursorVisual.SetActive(false);

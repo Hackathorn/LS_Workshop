@@ -41,10 +41,10 @@ public class LSConfigureUI : MonoBehaviour
         DebugUIBuilder.instance.AddRadio("100m", "group2", delegate(Toggle t) { RadioPressed("2", "group2", t); }, panel) ;
         DebugUIBuilder.instance.AddRadio("  1km", "group2", delegate(Toggle t) { RadioPressed("3", "group2", t); }, panel) ;
         DebugUIBuilder.instance.AddLabel("---Sky Dome---", panel);
-        DebugUIBuilder.instance.AddRadio("None", "group3", delegate(Toggle t) { RadioPressed("None", "group3", t); }, panel) ;
-        DebugUIBuilder.instance.AddRadio("Default", "group3", delegate(Toggle t) { RadioPressed("Default", "group3", t); }, panel) ;
-        DebugUIBuilder.instance.AddRadio("Clouds", "group3", delegate(Toggle t) { RadioPressed("Clouds", "group3", t); }, panel) ;
-        DebugUIBuilder.instance.AddRadio("Box", "group3", delegate(Toggle t) { RadioPressed("Box", "group3", t); }, panel) ;
+        DebugUIBuilder.instance.AddRadio("None", "group3", delegate(Toggle t) { RadioPressed("0", "group3", t); }, panel) ;
+        DebugUIBuilder.instance.AddRadio("Default", "group3", delegate(Toggle t) { RadioPressed("1", "group3", t); }, panel) ;
+        DebugUIBuilder.instance.AddRadio("Clouds", "group3", delegate(Toggle t) { RadioPressed("2", "group3", t); }, panel) ;
+        DebugUIBuilder.instance.AddRadio("Box", "group3", delegate(Toggle t) { RadioPressed("3", "group3", t); }, panel) ;
 
         panel = DebugUIBuilder.DEBUG_PANE_RIGHT; 
         DebugUIBuilder.instance.AddLabel("---Status---", panel);
