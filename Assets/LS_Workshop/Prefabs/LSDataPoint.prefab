@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4156941660422112975}
   - component: {fileID: 4036794465304960485}
   - component: {fileID: 4058174924042088935}
+  - component: {fileID: -2276334068152290770}
   m_Layer: 0
   m_Name: LSDataPoint
   m_TagString: Point
@@ -113,6 +114,20 @@ MonoBehaviour:
   _LSPointStd: []
   _LSPointSprite: {fileID: 0}
   _DimSize: 0
+--- !u!114 &-2276334068152290770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4058415276118026705}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bc24c7e198eb2044a63795040a0c5fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onDuration: 0.5
+  offDuration: 0.5
 --- !u!1 &4455546125228652038
 GameObject:
   m_ObjectHideFlags: 0

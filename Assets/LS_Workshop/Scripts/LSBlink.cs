@@ -5,13 +5,11 @@ using UnityEngine;
 public class LSBlink : MonoBehaviour
 {
     // making these public will show them in the inspector (set the values there)
-    public float delay; // amount of time before toggling
-    public float minIntensity; // the minimum intensity of the light
-    public float maxIntensity; // the maximum intensity of the light
-    public bool startAtMin;
- 
+    public float onDuration = 2f; // amount of seconds renderer on
+    public float offDuration = 2f; // amount of seconds render off
+
     // variable to hold a reference to the Light component on this gameObject
-    private Light myLight;
+    private MeshRenderer myRenderer;
  
     // variable to hold the amount of time that has passed
     private float timeElapsed;
@@ -19,53 +17,39 @@ public class LSBlink : MonoBehaviour
     // this function is called once by Unity the moment the game starts
     private void Awake()
     {
-        // get a reference to the Light component
-        myLight = GetComponent<Light>();
- 
-        // if the GetComponent was successful, the variable will no longer be empty (null)
-        if(myLight != null)
-        {
-            // if startAtMin is true, set intensity to the min to start, otherwise set to max
-            myLight.intensity = startAtMin ? minIntensity : maxIntensity;
-        }
+        // get a reference to the MeshRenderer component
+        myRenderer = GetComponent<MeshRenderer>();
+        myRenderer.enabled = true;
+    }
+    private void OnDisable() {
+        myRenderer.enabled = true;
     }
  
     // this function is called every frame by Unity
     private void Update()
     {
         // if we have a reference to the Light component
-        if(myLight != null)
+        if(myRenderer != null)
         {
             // add the amount of time that has passed since last frame
             timeElapsed += Time.deltaTime;
  
             // if the amount of time passed is greater than or equal to the delay
-            if(timeElapsed >= delay)
+            if(myRenderer.enabled && timeElapsed >= onDuration)
             {
-                // reset the time elapsed
+                // reset the time elapsed and turn off the renderer
                 timeElapsed = 0;
-                // toggle the light
-                ToggleLight();
+                myRenderer.enabled = false;
+            }
+            else if (!myRenderer.enabled && timeElapsed >= offDuration) 
+            {
+                timeElapsed = 0;
+                myRenderer.enabled = true;
+
+                // GameObject _go = GameObject.Find("LSWorkshop");
+                // LSpaceController _scr = _go.GetComponent<LSpaceController>();
+                // transform.localScale = Vector3.one * _scr.PlotScale;
             }
         }
     }
- 
-    // function to toggle between two intensities
-    public void ToggleLight()
-    {
-        // if the variable is not empty
-        if(myLight != null)
-        {
-            // if the intensity is currently the minimum, switch to max
-            if(myLight.intensity == minIntensity)
-            {
-                myLight.intensity = maxIntensity;
-            }
-            // if the intensity is currently the max, switch to min
-            else if(myLight.intensity == maxIntensity)
-            {
-                myLight.intensity = minIntensity;
-            }
-        }
-    }
-}
+ }

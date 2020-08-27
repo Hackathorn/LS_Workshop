@@ -14,6 +14,15 @@ public class LSPointController : MonoBehaviour
     public Sprite _LSPointSprite;
     public int _DimSize;
 
+//
+    private bool _LSPointSelected = false;
+    public bool LSPointSelectionToggle () {
+        _LSPointSelected = !_LSPointSelected;
+        GetComponent<LSBlink>().enabled = _LSPointSelected;
+        Debug.Log("HIT - point " + this.name + " un/selected as " + _LSPointSelected); 
+        return _LSPointSelected;
+    }
+
     // private variables below are set in RefreshPoints below during Update
     private float _PlotScale;
     private float _PointScale;
@@ -21,7 +30,6 @@ public class LSPointController : MonoBehaviour
     private int _BaseZ;
     private int _VertY;
     private bool _Variance; 
-
 
     // Register listener for onPlotChange and do initial RefreshPoints
     void Start() 

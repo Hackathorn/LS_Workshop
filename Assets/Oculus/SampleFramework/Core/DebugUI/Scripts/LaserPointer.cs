@@ -113,7 +113,7 @@ public class LaserPointer : OVRCursor
         {
             lineRenderer.SetPosition(0, start);
             lineRenderer.SetPosition(1, end);
-            raycastHitInfo(start, end);
+            raycastSelectPoint(start, end);
 
         }
         else if (laserBeamBehavior == LaserBeamBehavior.OnWhenHitTarget)
@@ -125,7 +125,7 @@ public class LaserPointer : OVRCursor
                     lineRenderer.enabled = true;
                     lineRenderer.SetPosition(0, start);
                     lineRenderer.SetPosition(1, end);
-                    raycastHitInfo(start, end);
+                    raycastSelectPoint(start, end);
                 }
             }
             else
@@ -138,15 +138,21 @@ public class LaserPointer : OVRCursor
         }
     }
 
-    // addition to retrieve info on LS Points hit
-    private void raycastHitInfo(Vector3 rayStart, Vector3 rayEnd)
+    // retrieve info on LS Points hit
+    private void raycastSelectPoint(Vector3 rayStart, Vector3 rayEnd)
     {
         RaycastHit hit;
         Vector3 rayDirection = rayEnd - rayStart; 
-        Debug.Log("HIT - looking...");
+
         if (Physics.Raycast(rayStart, rayDirection, out hit))
         {
-            Debug.Log("HIT - Found point " + hit.transform.name + " at distance " + hit.distance);
+            GameObject myPoint = hit.transform.gameObject;
+
+            if (myPoint.CompareTag("Point") && OVRInput.Get(OVRInput.RawButton.RIndexTrigger))
+            {
+                Debug.Log("HIT - point " + myPoint.name + " being un/selected");
+                bool _selected = myPoint.GetComponent<LSPointController>().LSPointSelectionToggle();
+            }
         }
 
     }
