@@ -265,7 +265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skyBoxes:
   - {fileID: 0}
-  - {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10304, guid: 0000000000000000f000000000000000, type: 3}
   - {fileID: 2100000, guid: 51cefc3e330f3354788f9cf0fc49ae1f, type: 2}
   - {fileID: 2100000, guid: 8950afb4043d26e42bdc4942b2f9f3cf, type: 2}
 --- !u!4 &447991341
@@ -427,17 +427,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: LSWorkshop
       objectReference: {fileID: 0}
-    - target: {fileID: 2802407088395238306, guid: b11551f7da20998459c7d0721859bbe4,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4735829919301588771, guid: b11551f7da20998459c7d0721859bbe4,
-        type: 3}
-      propertyPath: PointPrefab
-      value: 
-      objectReference: {fileID: 4058415276118026705, guid: 0de5b532ffc900e438b6800fb787b45c,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b11551f7da20998459c7d0721859bbe4, type: 3}
 --- !u!1001 &855415830

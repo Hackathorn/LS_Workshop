@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dbManager: {fileID: 7744119404236248193}
-  PointPrefab: {fileID: 1103527760695654, guid: eef24ee3b8e2ae54ab5331b3d2dca347,
+  PointPrefab: {fileID: 4058415276118026705, guid: 0de5b532ffc900e438b6800fb787b45c,
     type: 3}
   PointHolder: {fileID: 3170054080500205747}
 --- !u!1 &3170054080500205747

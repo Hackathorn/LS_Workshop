@@ -31,7 +31,7 @@ public class LSConfigureUI : MonoBehaviour
         // DebugUIBuilder.instance.AddDivider(panel);
 
         panel = DebugUIBuilder.DEBUG_PANE_CENTER; 
-        DebugUIBuilder.instance.AddLabel("---Rendering---", panel);
+        DebugUIBuilder.instance.AddLabel("---Render Mode---", panel);
         DebugUIBuilder.instance.AddRadio("Ball in 3-dim", "group1", delegate(Toggle t) { RadioPressed("Ball", "group1", t); }, panel) ;
         DebugUIBuilder.instance.AddRadio("Pole Mesh in N-dim", "group1", delegate(Toggle t) { RadioPressed("Pole", "group1", t); }, panel) ;
 

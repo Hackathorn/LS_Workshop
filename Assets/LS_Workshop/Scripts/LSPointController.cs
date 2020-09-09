@@ -6,6 +6,7 @@ using LSpacesProject;
 public class LSPointController : MonoBehaviour
 {
     // LSpaceController script in prefab LSpaceWorkshop
+
     // public variables below are set in LSpaceController script when this point is instantiated
     public GameObject ImagePrefab;
     public string _LSPointName;
@@ -13,6 +14,9 @@ public class LSPointController : MonoBehaviour
     public float[] _LSPointStd;
     public Sprite _LSPointSprite;
     public int _DimSize;
+    public string _pointClusterName;
+    public int _pointClusterCatergory;
+    public string _pointClusterLabel;
 
 //
     private bool _LSPointSelected = false;
@@ -34,14 +38,19 @@ public class LSPointController : MonoBehaviour
     // Register listener for onPlotChange and do initial RefreshPoints
     void Start() 
     {
+        // subscribe to events
         LSpaceController.onPlotChange += RefreshPoints;
+        LSpaceController.onClusterChange += RefreshCluster;
         RefreshPoints();
     }
 
     // Remove listener from onPlotChange when point is destroyed
 
-    private void OnDisable() {
+    private void OnDisable() 
+    {
+        // UNsubscribe to events
         LSpaceController.onPlotChange -= RefreshPoints;
+        LSpaceController.onClusterChange -= RefreshCluster;
     }
 
     // Refresh this point by getting current plot parms and setting pos & scale
@@ -56,9 +65,9 @@ public class LSPointController : MonoBehaviour
         _PlotScale = _scr.PlotScale;
         Debug.Log("REFRESH--PlotScale = " + _scr.PlotScale);
         _PointScale = _scr.PointScale;
-        _BaseX = _scr.BaseX;
-        _VertY = _scr.VertY;
-        _BaseZ = _scr.BaseZ;
+        _BaseX = _scr.baseX;
+        _VertY = _scr.vertY;
+        _BaseZ = _scr.baseZ;
         _Variance = _scr.Variance;
 
         // calculate new position on this point
@@ -84,6 +93,11 @@ public class LSPointController : MonoBehaviour
         GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
 
         GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(xPos, yPos, zPos, 1.0f));
+    }
+
+    private void RefreshCluster()
+    {
+
     }
 
 }
