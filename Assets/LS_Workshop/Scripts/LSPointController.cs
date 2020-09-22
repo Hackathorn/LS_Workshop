@@ -13,6 +13,7 @@ public class LSPointController : MonoBehaviour
     public float[] _LSPointPos;
     public float[] _LSPointStd;
     public Sprite _LSPointSprite;
+    public Texture2D _LSPointTexture;
     public int _DimSize;
     public string _pointClusterName;
     public int _pointClusterCatergory;
@@ -41,11 +42,12 @@ public class LSPointController : MonoBehaviour
         // subscribe to events
         LSpaceController.onPlotChange += RefreshPoints;
         LSpaceController.onClusterChange += RefreshCluster;
+
+        // 
         RefreshPoints();
     }
 
     // Remove listener from onPlotChange when point is destroyed
-
     private void OnDisable() 
     {
         // UNsubscribe to events
@@ -54,7 +56,6 @@ public class LSPointController : MonoBehaviour
     }
 
     // Refresh this point by getting current plot parms and setting pos & scale
-
     private void RefreshPoints()
     {
         // find public parameters in LSpaceController
@@ -64,7 +65,7 @@ public class LSPointController : MonoBehaviour
         // set _ parameters for this point
         _PlotScale = _scr.PlotScale;
         Debug.Log("REFRESH--PlotScale = " + _scr.PlotScale);
-        _PointScale = _scr.PointScale;
+        // _PointScale = _scr.PointScale;
         _BaseX = _scr.baseX;
         _VertY = _scr.vertY;
         _BaseZ = _scr.baseZ;
@@ -78,21 +79,22 @@ public class LSPointController : MonoBehaviour
         transform.localPosition = new Vector3 (xPos, yPos, zPos) * _PlotScale; //rescale to WorldSpace
 
         // calculate new scale for this point
-        Vector3 scale = new Vector3(1,1,1) * _PointScale;
         float xStd = Convert.ToSingle(_LSPointStd[_BaseX]) * _PlotScale; //rescale to WorldSpace
         float yStd = Convert.ToSingle(_LSPointStd[_VertY]) * _PlotScale;
         float zStd = Convert.ToSingle(_LSPointStd[_BaseZ]) * _PlotScale;
-        scale = new Vector3 (xStd, yStd, zStd) * _PointScale;
-
-        transform.localScale = scale; 
+        transform.localScale = new Vector3 (xStd, yStd, zStd) * 0.25f; // TBC >>>>>>>>>>>>>>>>> FUDGE FACTOR for looks!!!
 
         // Sets color according to x/y/z value
         GetComponent<Renderer>().material.color = new Color(xPos, yPos, zPos, 1.0f);
-
         // Activate emission color keyword so we can modify emission color
         GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
-
         GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(xPos, yPos, zPos, 1.0f));
+
+        // set image into sprite of Point
+        SpriteRenderer _scr2 = ImagePrefab.GetComponent<SpriteRenderer>();
+        _scr2.sprite = _LSPointSprite;
+        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TBC adjust image scale based on parent
+        // like.......... ImagePrefab.localScale /= this.scale;
     }
 
     private void RefreshCluster()

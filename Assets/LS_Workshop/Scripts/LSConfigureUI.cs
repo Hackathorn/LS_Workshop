@@ -8,14 +8,17 @@ using UnityEngine.UI;
 // Show off all the Debug UI components.
 public class LSConfigureUI : MonoBehaviour
 {
+    [Tooltip ("Skybox materials: None, Default, etc")]
     public Material[] skyBoxes; 
+    [Tooltip ("UI content panels for Space, Dimension, Move, Cluster")]
+    public GameObject[] contentPanels; // Content panels under CanvasWithDebug: 0=Space, 3=Dim, 4=Move, 5=Cluster
     bool inMenu;
     private Text sliderText;
     private int panel = DebugUIBuilder.DEBUG_PANE_CENTER; // display UI in the Center, Left or Right panels
 
 	void Start ()
     {
-        panel = DebugUIBuilder.DEBUG_PANE_LEFT;
+        panel = DebugUIBuilder.DEBUG_PANE_LEFT;  // 2 - Content Left
         DebugUIBuilder.instance.AddLabel("Choose Menu...", panel);
         DebugUIBuilder.instance.AddButton("Space", SpaceButtonPressed, panel);
         DebugUIBuilder.instance.AddButton("Dimension", DimensionButtonPressed, panel);
@@ -23,14 +26,10 @@ public class LSConfigureUI : MonoBehaviour
         DebugUIBuilder.instance.AddButton("Cluster", ClusterButtonPressed, panel);
         DebugUIBuilder.instance.AddDivider(panel);
         DebugUIBuilder.instance.AddButton("Status", StatusButtonPressed, panel);
-        DebugUIBuilder.instance.AddLabel("Button A to select", panel);
+        // DebugUIBuilder.instance.AddLabel("Button A to select", panel);
         DebugUIBuilder.instance.AddLabel("Button B to hide", panel);
 
-        // DebugUIBuilder.instance.AddLabel("--Space--  ", panel);
-        // DebugUIBuilder.instance.AddToggle("Ball or Pole;", BallPolePressed, panel);
-        // DebugUIBuilder.instance.AddDivider(panel);
-
-        panel = DebugUIBuilder.DEBUG_PANE_CENTER; 
+        panel = DebugUIBuilder.DEBUG_PANE_CENTER; // 0 - Center Content for Space
         DebugUIBuilder.instance.AddLabel("---Render Mode---", panel);
         DebugUIBuilder.instance.AddRadio("Ball in 3-dim", "group1", delegate(Toggle t) { RadioPressed("Ball", "group1", t); }, panel) ;
         DebugUIBuilder.instance.AddRadio("Pole Mesh in N-dim", "group1", delegate(Toggle t) { RadioPressed("Pole", "group1", t); }, panel) ;
@@ -46,41 +45,75 @@ public class LSConfigureUI : MonoBehaviour
         DebugUIBuilder.instance.AddRadio("Clouds", "group3", delegate(Toggle t) { RadioPressed("2", "group3", t); }, panel) ;
         DebugUIBuilder.instance.AddRadio("Box", "group3", delegate(Toggle t) { RadioPressed("3", "group3", t); }, panel) ;
 
-        panel = DebugUIBuilder.DEBUG_PANE_RIGHT; 
+        panel = DebugUIBuilder.DEBUG_PANE_RIGHT; // 1 - Content Right 
         DebugUIBuilder.instance.AddLabel("---Status---", panel);
+        InvokeRepeating("RefreshStatus", 0f, 1f); // update the Right panel (every second if shown) with current LS status
+
+        panel = 3; // 3 - Content Dimensional 
+        DebugUIBuilder.instance.AddLabel("---Dimensional---", panel);
+
+        panel = 4; // 4 - Content Move 
+        DebugUIBuilder.instance.AddLabel("---Move---", panel);
+
+        panel = 5; // 5 - Content Cluster 
+        DebugUIBuilder.instance.AddLabel("---Cluster---", panel);
 
         DebugUIBuilder.instance.Show();
         inMenu = true;
 
-        InvokeRepeating("RefreshStatus", 0f, 1f); // update the Right panel (every second if shown) with current LS status
+        // disable content panels, except for Space panel
+        for (int i = 0; i < contentPanels.Length; i++) {
+            contentPanels[i].SetActive(false);
+        }
+        contentPanels[0].SetActive(true);  // 0 = Space panel
+
+
 	}
+    
     public void RefreshStatus()
     {
         if (StatusDisplayed) {
             Debug.Log("Refreshing Status panel");
         }
     }
+
     private bool StatusDisplayed = false;
     public void StatusButtonPressed()
     {
         StatusDisplayed = !StatusDisplayed;
         Debug.Log("Button pressed for Status. Now " + StatusDisplayed);
     }
- public void SpaceButtonPressed()
+
+    public void SpaceButtonPressed()
     {
-        Debug.Log("Button pressed for SPACE");
+        for (int i = 0; i < contentPanels.Length; i++) {
+            contentPanels[i].SetActive(false);
+        }
+        contentPanels[0].SetActive(true);  // 0=Space, 1=Dim, 2=Move, 3=Cluster
     }
- public void DimensionButtonPressed()
+
+    public void DimensionButtonPressed()
     {
-        Debug.Log("Button pressed for DIMENSION");
+        for (int i = 0; i < contentPanels.Length; i++) {
+            contentPanels[i].SetActive(false);
+        }
+        contentPanels[1].SetActive(true);  // 0=Space, 1=Dim, 2=Move, 3=Cluster
     }
- public void MoveButtonPressed()
+
+    public void MoveButtonPressed()
     {
-        Debug.Log("Button pressed for MOVE");
+        for (int i = 0; i < contentPanels.Length; i++) {
+            contentPanels[i].SetActive(false);
+        }
+        contentPanels[2].SetActive(true);  // 0=Space, 1=Dim, 2=Move, 3=Cluster
     }
- public void ClusterButtonPressed()
+
+    public void ClusterButtonPressed()
     {
-        Debug.Log("Button pressed for CLUSTER");
+        for (int i = 0; i < contentPanels.Length; i++) {
+            contentPanels[i].SetActive(false);
+        }
+        contentPanels[3].SetActive(true);  // 0=Space, 1=Dim, 2=Move, 3=Cluster
     }
     public void RadioPressed(string radioLabel, string group, Toggle t)
     {

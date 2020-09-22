@@ -38,11 +38,15 @@ public class LSpaceController : MonoBehaviour
 			Debug.Log("PLOT CHANGE = " + _PlotScale);
 			onPlotChange(); }
 	} 
-	private float _PointScale = 0.25f;
-	public float PointScale {
-		get {return _PointScale; }
-		set {_PointScale = value;
-			Debug.Log("Point Scale = " + _PointScale);
+
+	// isBall is switch between rendering points as ball in 3-dim versus meshes in n-dim
+	private bool _isBall = true;  // initial rendering as Ball
+	public bool isBall 
+	{
+		get {return _isBall; }
+		// multiply LS values by PlotScale for World Space position & scale
+		set {_isBall = value;  
+			Debug.Log("RENDER CHANGE to Ball = " + _isBall);
 			onPlotChange(); }
 	} 
 	private int _baseX = 0;
@@ -141,7 +145,7 @@ public class LSpaceController : MonoBehaviour
 
 		Debug.Log("SELECT with LSClusterList len = " + LSClusterList.Count);
 
-		// Only deal with the first cluster -- TBC >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		// Only deal with the first cluster -- TBC >>>>>>>>>>
 		if (LSClusterList.Count > 0) 
 		{
 			// get cluster name from database
@@ -160,7 +164,7 @@ public class LSpaceController : MonoBehaviour
 					if (_clusterMap[i] > max) max = _clusterMap[i];
 				}
 			}
-			Debug.Log("Count of Outliers in ClusterMap: " + outliers); // TBC - deal with DB outliers >>>>>>>>>>>>>>>>>
+			Debug.Log("Count of Outliers in ClusterMap: " + outliers); // TBC - deal with DB outliers >>>>>>>
 			Debug.Log("Min/Max values of ClusterMap: " + min + ", " + max);
 
 			// get cluster labels from comma-delimited string; also remove blanks, tabs, etc
@@ -173,7 +177,10 @@ public class LSpaceController : MonoBehaviour
 		}
 	}
 
-	// create each point and set initial static parms 
+	/// <summary>
+    /// Create each point and set initial static parms.
+    /// </summary>
+    /// <param name="LSpaceID">ID to the current rendered Latent Space</param>
 	private void CreatePoints(int LSpaceID)
 	{
 		string sql = "SELECT LSPointID, LSPointName, LSPointPos, LSPointStd, LSPointImage FROM LSPoints WHERE LSpaceID = " + LSpaceID;
@@ -181,12 +188,12 @@ public class LSpaceController : MonoBehaviour
 
 		Debug.Log("Query complete with LSPointList len = " + LSPointList.Count);
 
-		// output the list of LSpaces
+		// output the list of LS Points
 		foreach (LSPoints lspoint in LSPointList)
 		{
 			GameObject _pt = Instantiate (PointPrefab, Vector3.zero, Quaternion.identity);
 
-			// Make child of PointHolder object as a container in hiearchy
+			// Make child of PointHolder object as the Point container 
 			_pt.transform.parent = PointHolder.transform;
 
 			// Assigns name to the prefab
@@ -208,6 +215,22 @@ public class LSpaceController : MonoBehaviour
 			var LSPointStdList = new float[listLen];
 			Buffer.BlockCopy(lspoint.LSPointStd, 0, LSPointStdList, 0, byteLen);
 			_scr._LSPointStd = LSPointStdList;
+
+			// create sprite from LSPointImage bytes
+			Texture2D tex = new Texture2D(_LSImageWidth, _LSImageHeight, TextureFormat.Alpha8, false);
+			Debug.Log("Tex format: " + tex.format);
+
+			int ExpectedBytes = _LSImageWidth * _LSImageHeight;
+			Debug.Log("expected bytes: " + ExpectedBytes);
+			int ActualBytes = lspoint.LSPointImage.Length;
+			Debug.Log("Actual bytes: " + ActualBytes);
+
+			tex.LoadRawTextureData(lspoint.LSPointImage);
+			tex.Apply();
+			_scr._LSPointTexture = tex;
+			Debug.Log("loaded texture: " + tex.width);
+			_scr._LSPointSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero, 1);
+			Debug.Log("created sprite");
 
 			_scr._pointClusterName = _clusterName;
 			int cat = _clusterMap[lspoint.LSPointID]; 
