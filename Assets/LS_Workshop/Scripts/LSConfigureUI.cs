@@ -63,12 +63,7 @@ public class LSConfigureUI : MonoBehaviour
         inMenu = true;
 
         // disable content panels, except for Space panel
-        for (int i = 0; i < contentPanels.Length; i++) {
-            contentPanels[i].SetActive(false);
-        }
-        contentPanels[0].SetActive(true);  // 0 = Space panel
-
-
+        activateContentPanel(0);    // 0=Space, 1=Dim, 2=Move, 3=Cluster
 	}
 
     public void RefreshStatus()
@@ -85,37 +80,37 @@ public class LSConfigureUI : MonoBehaviour
         Debug.Log("Button pressed for Status. Now " + StatusDisplayed);
     }
 
-    public void SpaceButtonPressed()
+    private int activePanel;
+    private void activateContentPanel(int _activePanel)
     {
-        for (int i = 0; i < contentPanels.Length; i++) {
-            contentPanels[i].SetActive(false);
+        activePanel = _activePanel;  // remember activePanel for show/hide
+        if (_activePanel >= 0 && _activePanel <= contentPanels.Length)
+        {
+            for (int i = 0; i < contentPanels.Length; i++) 
+            {
+                if (i == _activePanel) 
+                    contentPanels[i].SetActive(true);
+                else 
+                    contentPanels[i].SetActive(false);
+            }
         }
-        contentPanels[0].SetActive(true);  // 0=Space, 1=Dim, 2=Move, 3=Cluster
     }
-
+    public void SpaceButtonPressed() {
+        activateContentPanel(0);  // 0=Space, 1=Dim, 2=Move, 3=Cluster
+    }
     public void DimensionButtonPressed()
     {
-        for (int i = 0; i < contentPanels.Length; i++) {
-            contentPanels[i].SetActive(false);
-        }
-        contentPanels[1].SetActive(true);  // 0=Space, 1=Dim, 2=Move, 3=Cluster
+        activateContentPanel(1);  // 0=Space, 1=Dim, 2=Move, 3=Cluster
     }
-
     public void MoveButtonPressed()
     {
-        for (int i = 0; i < contentPanels.Length; i++) {
-            contentPanels[i].SetActive(false);
-        }
-        contentPanels[2].SetActive(true);  // 0=Space, 1=Dim, 2=Move, 3=Cluster
+        activateContentPanel(2);  // 0=Space, 1=Dim, 2=Move, 3=Cluster
     }
-
     public void ClusterButtonPressed()
     {
-        for (int i = 0; i < contentPanels.Length; i++) {
-            contentPanels[i].SetActive(false);
-        }
-        contentPanels[3].SetActive(true);  // 0=Space, 1=Dim, 2=Move, 3=Cluster
+        activateContentPanel(3);  // 0=Space, 1=Dim, 2=Move, 3=Cluster
     }
+
     public void RadioPressed(string radioLabel, string group, Toggle t)
     {
         // Debug.Log("Radio value changed: "+radioLabel+", from group "+group+". New value: "+t.isOn);
@@ -156,9 +151,13 @@ public class LSConfigureUI : MonoBehaviour
     {
         if(OVRInput.GetDown(OVRInput.Button.Two) || OVRInput.GetDown(OVRInput.Button.Start))
         {
-            if (inMenu) DebugUIBuilder.instance.Hide();
-            else DebugUIBuilder.instance.Show();
+            if (inMenu) 
+                DebugUIBuilder.instance.Hide();
+            else 
+                DebugUIBuilder.instance.Show();
             inMenu = !inMenu;
+
+            activateContentPanel(activePanel);
         }
     }
 
