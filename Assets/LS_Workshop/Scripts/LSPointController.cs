@@ -24,13 +24,15 @@ public class LSPointController : MonoBehaviour
     public bool LSPointSelectionToggle () {
         _LSPointSelected = !_LSPointSelected;
         GetComponent<LSBlink>().enabled = _LSPointSelected;
-        Debug.Log("HIT - point " + this.name + " un/selected as " + _LSPointSelected); 
+        // Debug.Log("HIT - point " + this.name + " un/selected as " + _LSPointSelected); 
         return _LSPointSelected;
     }
 
     // private variables below are set in RefreshPoints below during Update
     private float _PlotScale;
-    private float _PointScale;
+    private bool _isBall;
+    private bool _isImageShown;
+
     private int _BaseX;
     private int _BaseZ;
     private int _VertY;
@@ -64,8 +66,8 @@ public class LSPointController : MonoBehaviour
 
         // set _ parameters for this point
         _PlotScale = _scr.PlotScale;
-        Debug.Log("REFRESH--PlotScale = " + _scr.PlotScale);
-        // _PointScale = _scr.PointScale;
+        _isBall = _scr.isBall;
+        _isImageShown = _scr.isImageShown;
         _BaseX = _scr.baseX;
         _VertY = _scr.vertY;
         _BaseZ = _scr.baseZ;
@@ -90,11 +92,17 @@ public class LSPointController : MonoBehaviour
         GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
         GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(xPos, yPos, zPos, 1.0f));
 
-        // set image into sprite of Point
-        SpriteRenderer _scr2 = ImagePrefab.GetComponent<SpriteRenderer>();
-        _scr2.sprite = _LSPointSprite;
-        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TBC adjust image scale based on parent
-        // like.......... ImagePrefab.localScale /= this.scale;
+        // activate and set image into point sprite
+        if (_isImageShown) {
+            ImagePrefab.SetActive(true);
+            SpriteRenderer _scr2 = ImagePrefab.GetComponent<SpriteRenderer>();
+            _scr2.sprite = _LSPointSprite;
+            // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TBC adjust image scale based on parent
+            // like.......... ImagePrefab.localScale /= this.scale;
+        }
+        else {
+            ImagePrefab.SetActive(false);
+        }
     }
 
     private void RefreshCluster()
