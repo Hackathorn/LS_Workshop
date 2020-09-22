@@ -44,9 +44,16 @@ public class LSpaceController : MonoBehaviour
 	public bool isBall 
 	{
 		get {return _isBall; }
-		// multiply LS values by PlotScale for World Space position & scale
 		set {_isBall = value;  
-			Debug.Log("RENDER CHANGE to Ball = " + _isBall);
+			onPlotChange(); }
+	} 
+	// isImageShown is switch for showing point images
+	private bool _isImageShown = false;  // initial rendering as Ball
+	public bool isImageShown 
+	{
+		get {return _isImageShown; }
+		set {_isImageShown = value;  
+			Debug.Log("isImageShown set to " + _isImageShown);
 			onPlotChange(); }
 	} 
 	private int _baseX = 0;

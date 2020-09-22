@@ -57,6 +57,7 @@ public class LSConfigureUI : MonoBehaviour
 
         panel = 5; // 5 - Content Cluster 
         DebugUIBuilder.instance.AddLabel("---Cluster---", panel);
+        DebugUIBuilder.instance.AddToggle("Show Point Images", ShowImagePressed, false, panel);
 
         DebugUIBuilder.instance.Show();
         inMenu = true;
@@ -69,7 +70,7 @@ public class LSConfigureUI : MonoBehaviour
 
 
 	}
-    
+
     public void RefreshStatus()
     {
         if (StatusDisplayed) {
@@ -117,14 +118,12 @@ public class LSConfigureUI : MonoBehaviour
     }
     public void RadioPressed(string radioLabel, string group, Toggle t)
     {
-        Debug.Log("Radio value changed: "+radioLabel+", from group "+group+". New value: "+t.isOn);
+        // Debug.Log("Radio value changed: "+radioLabel+", from group "+group+". New value: "+t.isOn);
         if (group == "group2" && t.isOn) // Scale = 1m, 10m, 100m, 1km as string "0" ... "3"
         {
-            // find public parameters in LSpaceController
+            // change PoltScale in LSWorkshop Controller
             GameObject _go = GameObject.Find("LSWorkshop");
             LSpaceController _scr = _go.GetComponent<LSpaceController>();
-
-            // change PoltScale in LSWorkshop Controller
              _scr.PlotScale = float.Parse(radioLabel);
         }
 
@@ -138,6 +137,15 @@ public class LSConfigureUI : MonoBehaviour
     {
         Debug.Log("Ball-Pole Toggle pressed. Is on? "+t.isOn);
     }
+
+    public void ShowImagePressed(Toggle t)
+    {
+        // Set isImageShown bool in LSWorkshop Controller to refresh all points
+        GameObject _go = GameObject.Find("LSWorkshop");
+        LSpaceController _scr = _go.GetComponent<LSpaceController>();
+        _scr.isImageShown = t.isOn;
+    }
+
     public void SliderPressed(float f)
     {
         Debug.Log("Slider: " + f);
