@@ -31,11 +31,12 @@ public class LSPointController : MonoBehaviour
     // private variables below are set in RefreshPoints below during Update
     private float _PlotScale;
     private bool _isBall;
+    private bool _isNewYCompared;
     private bool _isImageShown;
-
     private int _BaseX;
     private int _BaseZ;
     private int _VertY;
+    private int _newY;
     private bool _Variance; 
 
     // Register listener for onPlotChange and do initial RefreshPoints
@@ -45,8 +46,12 @@ public class LSPointController : MonoBehaviour
         LSpaceController.onPlotChange += RefreshPoints;
         LSpaceController.onClusterChange += RefreshCluster;
 
-        // 
         RefreshPoints();
+    }
+
+    private void Update() 
+    {
+        AnimateNewY();
     }
 
     // Remove listener from onPlotChange when point is destroyed
@@ -67,10 +72,12 @@ public class LSPointController : MonoBehaviour
         // set _ parameters for this point
         _PlotScale = _scr.PlotScale;
         _isBall = _scr.isBall;
+        _isNewYCompared = _scr.isNewYCompared;
         _isImageShown = _scr.isImageShown;
         _BaseX = _scr.baseX;
         _VertY = _scr.vertY;
         _BaseZ = _scr.baseZ;
+        _newY = _scr.newY;
         _Variance = _scr.Variance;
 
         // calculate new position on this point
@@ -102,6 +109,46 @@ public class LSPointController : MonoBehaviour
         }
         else {
             ImagePrefab.SetActive(false);
+        }
+    }
+
+    //ref: https://developer.oculus.com/documentation/unity/unity-ovrinput/
+    //ref: https://docs.unity3d.com/ScriptReference/Vector3.Lerp.html
+    [Tooltip("Number of frames to complete newY movement")]
+    public int totalFrames = 200;
+    private bool isLerping = false; 
+    private int currentFrame;
+    private Vector3 startPos, endPos, newDelta;
+    private void AnimateNewY()
+    {
+        if (_isNewYCompared) 
+        {
+            if (!isLerping) {           //start yet another LERPing cycle
+                isLerping = true;
+                currentFrame = 0;
+                startPos = transform.position;
+                newDelta.y = Convert.ToSingle(_LSPointPos[_newY]) * _PlotScale;
+                endPos = startPos + newDelta;
+            }
+            // else continuing with Lerping
+            //    if at Lerping end, then return to original position and isLerping = false
+            else ContinueLerping();
+        }
+        else if (isLerping)   // if isLerping, then stop and return to vertY
+        {
+            ContinueLerping();
+        }
+
+        void ContinueLerping()
+        {
+            currentFrame += 1;
+            float pctComplete = (float)currentFrame / (float)totalFrames;
+            this.transform.position = Vector3.Lerp(startPos, endPos, pctComplete);
+            // Debug.Log("LERP cycle " + currentFrame + " with " + transform.position);
+            if (currentFrame >= totalFrames) {
+                isLerping = false;
+                this.transform.position = startPos;
+                }
         }
     }
 

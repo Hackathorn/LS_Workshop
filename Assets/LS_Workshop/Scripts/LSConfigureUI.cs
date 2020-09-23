@@ -51,6 +51,10 @@ public class LSConfigureUI : MonoBehaviour
 
         panel = 3; // 3 - Content Dimensional 
         DebugUIBuilder.instance.AddLabel("---Dimensional---", panel);
+        DebugUIBuilder.instance.AddLabel("baseX=0 baseX=1 vertY=2", panel);
+        DebugUIBuilder.instance.AddLabel("newY=NONE", panel);
+        DebugUIBuilder.instance.AddButton("Increment newY", newYButtonPressed, panel);
+        DebugUIBuilder.instance.AddToggle("Compare vertY-newY", CompareDimPressed, false, panel);
 
         panel = 4; // 4 - Content Move 
         DebugUIBuilder.instance.AddLabel("---Move---", panel);
@@ -78,6 +82,67 @@ public class LSConfigureUI : MonoBehaviour
     {
         StatusDisplayed = !StatusDisplayed;
         Debug.Log("Button pressed for Status. Now " + StatusDisplayed);
+    }
+
+    private int _baseX;
+    private int _baseZ;
+    private int _vertY;
+    private int _newY;
+    public void newYButtonPressed()
+    {
+        int _baseX, _baseZ, _vertY, _newY, _dimSize;
+
+        // Set current baseX, baseZ, vertY
+        GameObject _go = GameObject.Find("LSWorkshop");
+        LSpaceController _scr = _go.GetComponent<LSpaceController>();
+        _baseX = _scr.baseX;
+        _baseZ = _scr.baseZ;
+        _vertY = _scr.vertY;
+        _newY  = _scr.newY;    // not updated in LSpaceController until Compare
+        _dimSize = _scr._LSDimSize;          
+
+        Transform panelTransform = contentPanels[1].transform;
+        foreach (Transform child in panelTransform)               // find Text in Dim panel objects
+        {
+            Text _textComponent = child.GetComponent<Text>();
+            if (_textComponent != null) 
+            {
+                if (_textComponent.text.Substring(0, 5) == "baseX") 
+                {
+                    string s = String.Format("baseX={0} baseX={1} vertY={2}", _baseX, _baseZ, _vertY);
+                    _textComponent.text = s;
+                }
+            }
+        }
+
+        // Increment newY thru unused dimensions
+        foreach (Transform child in panelTransform)
+        {
+            Text _textComponent = child.GetComponent<Text>();
+            if (_textComponent != null) 
+            {
+                if (_textComponent.text.Substring(0, 4) == "newY") 
+                {
+                    for (int i = _newY+1; i < _dimSize+1; i++)  // start looking for NEXT _newY value
+                    {
+                        if (!(i==_baseX || i==_baseZ || i==_vertY)) 
+                        {
+                            _newY = i;
+                            string s = String.Format("newY={0}", _newY);
+                            if (_newY == _dimSize) // out of dimensions???
+                            {  
+                                _newY = -1;        // recycle to NONE = -1
+                                s = "newY=NONE";
+                            }
+                            _textComponent.text = s;
+                            _scr.newY = _newY;   // update newY in LSpaceController
+                            // set Compare toggle to OFF >>>>>>>>>>>>>>>>>>> TBC
+                            break;
+                        }
+                    }
+                }            
+            }
+        }
     }
 
     private int activePanel;
@@ -131,6 +196,14 @@ public class LSConfigureUI : MonoBehaviour
     public void BallPolePressed(Toggle t)
     {
         Debug.Log("Ball-Pole Toggle pressed. Is on? "+t.isOn);
+    }
+
+    public void CompareDimPressed(Toggle t)
+    {
+        // Set isImageShown bool in LSWorkshop Controller to refresh all points
+        GameObject _go = GameObject.Find("LSWorkshop");
+        LSpaceController _scr = _go.GetComponent<LSpaceController>();
+        _scr.isNewYCompared = t.isOn;
     }
 
     public void ShowImagePressed(Toggle t)
