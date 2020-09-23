@@ -5,24 +5,22 @@ using UnityEngine.UI;
 
 public class LSPlatformController : MonoBehaviour
 {
-    //ref: https://developer.oculus.com/documentation/unity/unity-ovrinput/
-    //ref: https://docs.unity3d.com/ScriptReference/Vector3.Lerp.html
-    //ref: 
-    [Tooltip("Number of frames to complete platform movement")]
-    public int totalFrames = 20;
-    // public float duration = 1.0f;
-
     public GameObject LSZeroAxes;
     public Text XTextValue;
     public Text YTextValue;
     public Text ZTextValue;
 
-    private bool isLerping; 
+    //ref: https://developer.oculus.com/documentation/unity/unity-ovrinput/
+    //ref: https://docs.unity3d.com/ScriptReference/Vector3.Lerp.html
+    //ref: 
+    public int totalFrames = 20;
+    [Tooltip("Number of frames to complete platform movement")]
+    // public float duration = 1.0f;
+    private bool isLerping = false; 
     private int currentFrame;
     private Vector3 startPos, endPos;
 
     void Start() {
-        isLerping = false;
         LSpaceController.onPlotChange += RefreshAxes;
     }
     // Remove listener from onPlotChange when point is destroyed

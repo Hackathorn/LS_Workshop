@@ -47,6 +47,15 @@ public class LSpaceController : MonoBehaviour
 		set {_isBall = value;  
 			onPlotChange(); }
 	} 
+	// isNewYCompared is switch for animating Y position of points
+	private bool _isNewYCompared = false;  // initial rendering as Ball
+	public bool isNewYCompared 
+	{
+		get {return _isNewYCompared; }
+		set {_isNewYCompared = value;  
+			Debug.Log("isImageShown set to " + _isNewYCompared);
+			onPlotChange(); }
+	} 
 	// isImageShown is switch for showing point images
 	private bool _isImageShown = false;  // initial rendering as Ball
 	public bool isImageShown 
@@ -74,11 +83,12 @@ public class LSpaceController : MonoBehaviour
 		set {_vertY = value;
 			onPlotChange(); }
 	} 
-	private int _newY = -1;
+	private int _newY = -1;   // -1 = NONE >>>>>>>>>>> FUDGE TBC
 	public int newY {
 		get {return _newY; }
 		set {_newY = value;
-			onPlotChange(); }
+			// onPlotChange();  // Hold alerting points >>>>>>>>>>> TBC
+			}
 	} 
 
 	private bool _Variance = false;
@@ -97,7 +107,7 @@ public class LSpaceController : MonoBehaviour
 	private int _CurrentLSpaceID; 
 	private string _LSName;
 	private int _LSSampleSize;
-	private int _LSDimSize;
+	public int _LSDimSize;  //Changed to PUBLIC >>>>>>>>>>> TBC
 	private int _LSImageWidth;
 	private int _LSImageHeight;
 
@@ -150,7 +160,7 @@ public class LSpaceController : MonoBehaviour
 		string sql = "SELECT LSClusterName, LSClusterMap, LSClusterLabels FROM LSClusters WHERE LSpaceID = " + LSpaceID;
 		List<LSClusters> LSClusterList = dbManager.Query<LSClusters>(sql);
 
-		Debug.Log("SELECT with LSClusterList len = " + LSClusterList.Count);
+		// Debug.Log("SELECT with LSClusterList len = " + LSClusterList.Count);
 
 		// Only deal with the first cluster -- TBC >>>>>>>>>>
 		if (LSClusterList.Count > 0) 
@@ -171,13 +181,13 @@ public class LSpaceController : MonoBehaviour
 					if (_clusterMap[i] > max) max = _clusterMap[i];
 				}
 			}
-			Debug.Log("Count of Outliers in ClusterMap: " + outliers); // TBC - deal with DB outliers >>>>>>>
-			Debug.Log("Min/Max values of ClusterMap: " + min + ", " + max);
+			// Debug.Log("Count of Outliers in ClusterMap: " + outliers); // TBC - deal with DB outliers >>>>>>>
+			// Debug.Log("Min/Max values of ClusterMap: " + min + ", " + max);
 
 			// get cluster labels from comma-delimited string; also remove blanks, tabs, etc
 			char[] delim = {',', ' ', '\t'};
 			_clusterLabels = LSClusterList[0].LSClusterLabels.Split(delim, StringSplitOptions.RemoveEmptyEntries); 
-			Debug.Log("First/second category label: " + _clusterLabels[0] + ", " + _clusterLabels[1]); 
+			// Debug.Log("First/second category label: " + _clusterLabels[0] + ", " + _clusterLabels[1]); 
 		}
 		else {
 			Debug.Log("No clusters found in LS database");
@@ -224,21 +234,23 @@ public class LSpaceController : MonoBehaviour
 			_scr._LSPointStd = LSPointStdList;
 
 			// create sprite from LSPointImage bytes
-			Texture2D tex = new Texture2D(_LSImageWidth, _LSImageHeight, TextureFormat.Alpha8, false);
-			Debug.Log("Tex format: " + tex.format);
-
 			int ExpectedBytes = _LSImageWidth * _LSImageHeight;
-			Debug.Log("expected bytes: " + ExpectedBytes);
 			int ActualBytes = lspoint.LSPointImage.Length;
-			Debug.Log("Actual bytes: " + ActualBytes);
+			if (ExpectedBytes != ActualBytes) {
+				Debug.Log("Expected bytes for point image not equal to actual bytes");
+			}
+			else  // continue with creating point sprite
+			{
+				Texture2D tex = new Texture2D(_LSImageWidth, _LSImageHeight, TextureFormat.Alpha8, false);
+				tex.LoadRawTextureData(lspoint.LSPointImage);
+				tex.Apply();
+				_scr._LSPointTexture = tex;
+				// Debug.Log("loaded texture: " + tex.width);
+				_scr._LSPointSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero, 1);
+				// Debug.Log("created sprite");
+			}
 
-			tex.LoadRawTextureData(lspoint.LSPointImage);
-			tex.Apply();
-			_scr._LSPointTexture = tex;
-			Debug.Log("loaded texture: " + tex.width);
-			_scr._LSPointSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero, 1);
-			Debug.Log("created sprite");
-
+			// set cluster into point
 			_scr._pointClusterName = _clusterName;
 			int cat = _clusterMap[lspoint.LSPointID]; 
 			_scr._pointClusterCatergory = cat;
