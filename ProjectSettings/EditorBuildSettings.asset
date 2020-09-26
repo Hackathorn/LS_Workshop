@@ -5,16 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/LS_Workshop/Scenes/LSWelcomeScene.unity
     guid: 3724f686e35a3fd499ed9e045b4fb727
-  - enabled: 1
+  - enabled: 0
     path: Assets/LS_Workshop/Scenes/LSOverviewScene.unity
     guid: 8bf353e176cada94bb8a6478bc13b2f0
-  - enabled: 1
+  - enabled: 0
     path: Assets/LS_Workshop/Scenes/LSHowToScene.unity
     guid: f520f94c7896f1144a3b4a4734455d7f
-  - enabled: 1
+  - enabled: 0
     path: Assets/LS_Workshop/Scenes/LSWhatIsLatentSpaceScene.unity
     guid: 20275a0087808354683325dacd2e8fc4
   - enabled: 1

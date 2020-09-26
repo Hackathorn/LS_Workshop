@@ -49,10 +49,10 @@ public class LSPointController : MonoBehaviour
         RefreshPoints();
     }
 
-    private void Update() 
-    {
-        AnimateNewY();
-    }
+    // private void Update() 
+    // {
+    //     AnimateNewY();
+    // }
 
     // Remove listener from onPlotChange when point is destroyed
     private void OnDisable() 
@@ -110,51 +110,40 @@ public class LSPointController : MonoBehaviour
         else {
             ImagePrefab.SetActive(false);
         }
+
+        AnimateNewY();
     }
 
-    //ref: https://developer.oculus.com/documentation/unity/unity-ovrinput/
-    //ref: https://docs.unity3d.com/ScriptReference/Vector3.Lerp.html
-    [Tooltip("Number of frames to complete newY movement")]
-    public int totalFrames = 200;
-    private bool isLerping = false; 
-    private int currentFrame;
-    private Vector3 startPos, endPos, newDelta;
+    private bool isComparingNewY = false; 
+    private Vector3 startPos, endPos;
+    private float newDelta;
     private void AnimateNewY()
     {
-        if (_isNewYCompared) 
-        {
-            if (!isLerping) {           //start yet another LERPing cycle
-                isLerping = true;
-                currentFrame = 0;
-                startPos = transform.position;
-                newDelta.y = Convert.ToSingle(_LSPointPos[_newY]) * _PlotScale;
-                endPos = startPos + newDelta;
-            }
-            // else continuing with Lerping
-            //    if at Lerping end, then return to original position and isLerping = false
-            else ContinueLerping();
-        }
-        else if (isLerping)   // if isLerping, then stop and return to vertY
-        {
-            ContinueLerping();
-        }
+        LineRenderer lr = this.GetComponent<LineRenderer>();
+        if (!isComparingNewY && _newY != -1)    // if not comparing and newY not NONE 
+        {                                       // then let's do it
+            isComparingNewY = true;
+            startPos = endPos = transform.position;
+            endPos.y = Convert.ToSingle(_LSPointPos[_newY]) * _PlotScale;
+            newDelta = endPos.y - startPos.y; 
 
-        void ContinueLerping()
+            // deactivate MeshRenderer & activate LineRenderer
+            // this.GetComponent<MeshRenderer>().enabled = false;
+            lr.enabled = true;
+            lr.SetPosition(0, startPos);
+            lr.SetPosition(1, endPos);
+            lr.startWidth = lr.endWidth = 0.05f;
+            if (newDelta > 0) lr.startColor = Color.yellow;
+                else lr.startColor = Color.blue;
+            lr.endColor = lr.startColor;
+        }
+        else    // return space to normal balls
         {
-            currentFrame += 1;
-            float pctComplete = (float)currentFrame / (float)totalFrames;
-            this.transform.position = Vector3.Lerp(startPos, endPos, pctComplete);
-            // Debug.Log("LERP cycle " + currentFrame + " with " + transform.position);
-            if (currentFrame >= totalFrames) {
-                isLerping = false;
-                this.transform.position = startPos;
-                }
+            isComparingNewY = false;
+            // this.GetComponent<MeshRenderer>().enabled = true;
+            lr.enabled = false;
         }
     }
 
-    private void RefreshCluster()
-    {
-
-    }
-
+    private void RefreshCluster() {}
 }
