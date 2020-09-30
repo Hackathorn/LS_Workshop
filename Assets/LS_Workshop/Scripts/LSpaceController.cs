@@ -203,7 +203,7 @@ public class LSpaceController : MonoBehaviour
 		string sql = "SELECT LSPointID, LSPointName, LSPointPos, LSPointStd, LSPointImage FROM LSPoints WHERE LSpaceID = " + LSpaceID;
 		List<LSPoints> LSPointList = dbManager.Query<LSPoints>(sql);
 
-		Debug.Log("Query complete with LSPointList len = " + LSPointList.Count);
+		// Debug.Log("Query complete with LSPointList len = " + LSPointList.Count);
 
 		// output the list of LS Points
 		foreach (LSPoints lspoint in LSPointList)
@@ -223,7 +223,7 @@ public class LSpaceController : MonoBehaviour
 			int byteLen = lspoint.LSPointPos.Length; 
 			int listLen = byteLen / sizeof(float);
 			// ??? what if this listLen and _LSDimSize differ???
-			_scr._DimSize = _LSDimSize = listLen;   // make it the same
+			_LSDimSize = listLen;   // make it the same
 
 			var LSPointPosList = new float[listLen];
 			Buffer.BlockCopy(lspoint.LSPointPos, 0, LSPointPosList, 0, byteLen);

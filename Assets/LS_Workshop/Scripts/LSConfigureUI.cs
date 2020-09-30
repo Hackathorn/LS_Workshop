@@ -179,9 +179,21 @@ public class LSConfigureUI : MonoBehaviour
     public void RadioPressed(string radioLabel, string group, Toggle t)
     {
         // Debug.Log("Radio value changed: "+radioLabel+", from group "+group+". New value: "+t.isOn);
+
+        if (group == "group1" && t.isOn) // Ball in 3-dim OR Pole Mesh in N-dim
+        {
+            // change bool isBall in LSWorkshop Controller
+            GameObject _go = GameObject.Find("LSWorkshop");
+            LSpaceController _scr = _go.GetComponent<LSpaceController>();
+            if (radioLabel == "Ball") 
+                _scr.isBall = true; 
+            else 
+                _scr.isBall = false;
+        }
+
         if (group == "group2" && t.isOn) // Scale = 1m, 10m, 100m, 1km as string "0" ... "3"
         {
-            // change PoltScale in LSWorkshop Controller
+            // change PlotScale in LSWorkshop Controller
             GameObject _go = GameObject.Find("LSWorkshop");
             LSpaceController _scr = _go.GetComponent<LSpaceController>();
              _scr.PlotScale = float.Parse(radioLabel);
