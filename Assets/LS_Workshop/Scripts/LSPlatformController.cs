@@ -24,7 +24,6 @@ public class LSPlatformController : MonoBehaviour
         LSpaceController.onPlotChange += RefreshAxes;
     }
     // Remove listener from onPlotChange when point is destroyed
-
     private void OnDisable() {
         LSpaceController.onPlotChange -= RefreshAxes;
     }

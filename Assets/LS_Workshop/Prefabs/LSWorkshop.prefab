@@ -49,7 +49,7 @@ MonoBehaviour:
   changeWorkingName: 0
   workingName: 
   overwriteIfExists: 0
-  debugTrace: 1
+  debugTrace: 0
 --- !u!1 &2802407088395238306
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,9 +96,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dbManager: {fileID: 7744119404236248193}
-  PointPrefab: {fileID: 4058415276118026705, guid: 0de5b532ffc900e438b6800fb787b45c,
+  PointPrefab: {fileID: 3934222438046351098, guid: f40bc47486a291c4580e9ecc6daaf6d8,
     type: 3}
   PointHolder: {fileID: 3170054080500205747}
+  _LSDimSize: 0
 --- !u!1 &3170054080500205747
 GameObject:
   m_ObjectHideFlags: 0
