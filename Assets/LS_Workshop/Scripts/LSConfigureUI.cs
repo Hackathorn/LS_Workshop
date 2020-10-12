@@ -54,10 +54,11 @@ public class LSConfigureUI : MonoBehaviour
         DebugUIBuilder.instance.AddLabel("baseX=0 baseX=1 vertY=2", panel);
         DebugUIBuilder.instance.AddLabel("newY=NONE", panel);
         DebugUIBuilder.instance.AddButton("Increment newY", newYButtonPressed, panel);
-        DebugUIBuilder.instance.AddToggle("Compare vertY-newY", CompareDimPressed, false, panel);
+        DebugUIBuilder.instance.AddToggle("Compare vertY-newY", CompareDimToggled, false, panel);
 
         panel = 4; // 4 - Content Move 
         DebugUIBuilder.instance.AddLabel("---Move---", panel);
+        // DebugUIBuilder.instance.AddToggle("Rotate Space on Y-axis", RotateSpacePressed, false, panel);
 
         panel = 5; // 5 - Content Cluster 
         DebugUIBuilder.instance.AddLabel("---Cluster---", panel);
@@ -82,6 +83,14 @@ public class LSConfigureUI : MonoBehaviour
     {
         StatusDisplayed = !StatusDisplayed;
         Debug.Log("Button pressed for Status. Now " + StatusDisplayed);
+        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TBC show Status Panel on right
+    }
+
+    private bool RotateSpaceOnY = false;
+    public void RotateSpacePressed()
+    {
+        RotateSpaceOnY = !RotateSpaceOnY;
+        Debug.Log("Button pressed for Rotate. Now " + RotateSpaceOnY);
     }
 
     private int _baseX;
@@ -210,7 +219,7 @@ public class LSConfigureUI : MonoBehaviour
         Debug.Log("Ball-Pole Toggle pressed. Is on? "+t.isOn);
     }
 
-    public void CompareDimPressed(Toggle t)
+    public void CompareDimToggled(Toggle t)
     {
         // Set isImageShown bool in LSWorkshop Controller to refresh all points
         GameObject _go = GameObject.Find("LSWorkshop");

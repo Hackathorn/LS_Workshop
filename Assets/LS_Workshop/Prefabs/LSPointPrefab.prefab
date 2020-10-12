@@ -47,20 +47,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a631d60c31f91734fbfbbc25ca5f2c83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _LSPointName: 
+  _LSDimSize: 0
+  _LSPointPos: []
+  _LSPointStd: []
+  _LSPointSprite: {fileID: 0}
+  _LSPointTexture: {fileID: 0}
   LSPointPoleGradient:
     serializedVersion: 2
     key0: {r: 0, g: 0.00066371687, b: 0.9622642, a: 1}
-    key1: {r: 1, g: 0.9964781, b: 0, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 1, b: 0, a: 0}
+    key3: {r: 1, g: 0.9964781, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
-    ctime1: 65535
-    ctime2: 0
-    ctime3: 0
+    ctime1: 32768
+    ctime2: 65535
+    ctime3: 65535
     ctime4: 0
     ctime5: 0
     ctime6: 0
@@ -74,13 +80,8 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
-    m_NumColorKeys: 2
+    m_NumColorKeys: 3
     m_NumAlphaKeys: 2
-  _LSPointName: 
-  _LSPointPos: []
-  _LSPointStd: []
-  _LSPointSprite: {fileID: 0}
-  _LSPointTexture: {fileID: 0}
   _pointClusterName: 
   _pointClusterCatergory: 0
   _pointClusterLabel: 
@@ -295,7 +296,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4532839430035843817}
-  - component: {fileID: 7911449401137655816}
+  - component: {fileID: 4936181735471612170}
   m_Layer: 0
   m_Name: LineRender
   m_TagString: Untagged
@@ -317,14 +318,14 @@ Transform:
   m_Father: {fileID: 1423093610994669233}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!120 &7911449401137655816
+--- !u!120 &4936181735471612170
 LineRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4092999599502181109}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -335,7 +336,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: dda633032b2407547a687018bca206d9, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -361,7 +362,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.05
+    widthMultiplier: 1
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -379,7 +380,7 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0, g: 1, b: 0, a: 1}
+      key0: {r: 1, g: 1, b: 1, a: 1}
       key1: {r: 1, g: 1, b: 1, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
@@ -407,7 +408,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 1
+    numCapVertices: 0
     alignment: 0
     textureMode: 0
     shadowBias: 0.5
@@ -425,6 +426,7 @@ GameObject:
   - component: {fileID: 6584711435404608051}
   - component: {fileID: 4160389259603308380}
   - component: {fileID: 4503264913792302338}
+  - component: {fileID: 7847021197030695797}
   m_Layer: 0
   m_Name: PoleMesh
   m_TagString: Untagged
@@ -493,3 +495,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &7847021197030695797
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4751169083595335433}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
