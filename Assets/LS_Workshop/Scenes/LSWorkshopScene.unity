@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -560,7 +560,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: LSWorkshop
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 4735829919301588771, guid: b11551f7da20998459c7d0721859bbe4,
+        type: 3}
+      propertyPath: PointPrefab
+      value: 
+      objectReference: {fileID: 1066846448812974085, guid: 60cadef8b65a8d642b88121aa08d9693,
+        type: 3}
+    m_RemovedComponents:
+    - {fileID: 242273605, guid: b11551f7da20998459c7d0721859bbe4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b11551f7da20998459c7d0721859bbe4, type: 3}
 --- !u!1001 &855415830
 PrefabInstance:
@@ -1538,6 +1545,27 @@ PrefabInstance:
       objectReference: {fileID: 381464441}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a9d2de84afb308a4796cc671d3432b4d, type: 3}
+--- !u!1 &2146866708 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2802407088395238306, guid: b11551f7da20998459c7d0721859bbe4,
+    type: 3}
+  m_PrefabInstance: {fileID: 802162059}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2146866709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146866708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9d4962f7d08bf64696c02968ea83deb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Duration: 2
+  PointCount: 0
+  curPoint: 0
 --- !u!4 &1559538602986498480
 Transform:
   m_ObjectHideFlags: 0
