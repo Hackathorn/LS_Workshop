@@ -4,19 +4,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using LSpacesProject; 
+
 public class LSPointController : MonoBehaviour
 {
     // LSpaceController script in prefab LSpaceWorkshop
 
     // public variables below are set in LSpaceController script when this point is instantiated
     // these values do not change during Play
-    public Gradient LSPointPoleGradient;
 
     public string _LSPointName;
+    public int _LSDimSize;
     public float[] _LSPointPos;
     public float[] _LSPointStd;
     public Sprite _LSPointSprite;
     public Texture2D _LSPointTexture;
+    public Gradient LSPointPoleGradient;
     public string _pointClusterName;
     public int _pointClusterCatergory;
     public string _pointClusterLabel;
@@ -30,6 +32,7 @@ public class LSPointController : MonoBehaviour
     }
 
     // private variables below are set in RefreshPoints during onPlotChange
+    private GameObject _goLSWorkshop;
     private GameObject _goBall; 
     private GameObject _goPole; 
     private GameObject _goImage; 
@@ -44,7 +47,7 @@ public class LSPointController : MonoBehaviour
     private int _vertY;
     private int _newY;
     private bool _Variance; // uncertain as to function???
-    private int _dimSize; // set from _LSPointPos.Length
+    // private int _dimSize; // set from _LSPointPos.Length
 
     // Register listener for onPlotChange and do initial RefreshPoints
     void Start() 
@@ -73,8 +76,8 @@ public class LSPointController : MonoBehaviour
     private void RefreshPoints()
     {
         // find public parameters in LSpaceController
-        GameObject _go = GameObject.Find("LSWorkshop");
-        LSpaceController _scr = _go.GetComponent<LSpaceController>();
+        _goLSWorkshop = GameObject.Find("LSWorkshop");
+        LSpaceController _scr = _goLSWorkshop.GetComponent<LSpaceController>();
 
         // set current params for this point
         _plotScale = _scr.PlotScale;
@@ -86,7 +89,6 @@ public class LSPointController : MonoBehaviour
         _vertY = _scr.vertY;
         _newY = _scr.newY;
         _Variance = _scr.Variance;
-        _dimSize = _LSPointPos.Length;
 
         // set _go children (Ball, Pole, Image, Line) for this point
         _goBall = this.transform.Find("BallSphere").gameObject;
@@ -95,17 +97,19 @@ public class LSPointController : MonoBehaviour
         _goLine = this.transform.Find("LineRender").gameObject;
 
 
-        // then refresh either Ball or Pole
+        // Refresh either Ball or Pole
         if (_isBall) 
             RefreshPointsAsBall(); 
         else 
-            RefreshPointsAsPole();
+            RefreshPointsAsPoleMesh();
+            // RefreshPointsAsPoleLine();
     }
 
     private void RefreshPointsAsBall() 
     {
         _goBall.SetActive(true);
         _goPole.SetActive(false);
+        _goLSWorkshop.transform.Find("PoleHolder").gameObject.SetActive(false);
 
         // calculate new position on this point
         float xPos = Convert.ToSingle(_LSPointPos[_baseX]);
@@ -145,62 +149,121 @@ public class LSPointController : MonoBehaviour
         AnimateNewY();
     }
 
-    private void RefreshPointsAsPole()
+    private void RefreshPointsAsPoleMesh()
     {
-        // private Vector3[] vertices;
-        // private int[] triangles;
-        // private Color[] colors; 
-        // private Gradient pointGradient;
-
         _goBall.SetActive(false);
         _goPole.SetActive(true);
+        _goLSWorkshop.transform.Find("PoleHolder").gameObject.SetActive(true);
 
-        // create _dimSize vertices around a X-Z circle clockwise
-        Vector3[] vertices = new Vector3[_dimSize+1];
-        vertices[0] = Vector3.zero; // set initial vertex in center
+        // create _LSDimSize vertices around a X-Z circle clockwise
+        // remove center vertex so that # of vectices = dimSize
+        Vector3[] vertices = new Vector3[_LSDimSize];
 
-        for (int i = 0; i < _dimSize; i++)
+        for (int i = 0; i < _LSDimSize; i++)
         {
-            int ii = _dimSize - i - 1;
-            float posX = (float) Math.Cos(ii * (2*Math.PI/_dimSize));
-            float posZ = (float) Math.Sin(ii * (2*Math.PI/_dimSize));
-            vertices[i+1] = new Vector3(posX, _LSPointPos[i], posZ);
+            int ii = _LSDimSize - i - 1;
+            float posX = _plotScale * (float) Math.Cos(ii * (2*Math.PI/_LSDimSize));
+            float posZ = _plotScale * (float) Math.Sin(ii * (2*Math.PI/_LSDimSize));
+            float posY = _plotScale * _LSPointPos[i];
+            vertices[i] = new Vector3(posX, posY, posZ);
         }
         
         // create dimSize triangles[t..t+2], each with 3*dimSize values
         int t = 0; 
-        int[] triangles = new int[3 * _dimSize];
+        int[] triangles = new int[3 * (_LSDimSize - 1)];
 
-        for (int i = 1; i < _dimSize; i++)
+        for (int i = 1; i < (_LSDimSize - 1); i++)
         {
             triangles[t  ] = 0  ;
             triangles[t+1] = i  ;
             triangles[t+2] = i+1  ;
             t += 3;
         }
-        // complete last triangle
-        triangles[t  ] = 0;
-        triangles[t+1] = _dimSize;
-        triangles[t+2] = 1;
 
         // create Colors array (instead of UV) for each vertex
         Color[] colors = new Color[vertices.Length];
         float minY = _LSPointPos.Min();
         float maxY = _LSPointPos.Max();
         // aveY = vertices.Average();
-        for (int i = 0; i < _dimSize; i++)
+        for (int i = 0; i < _LSDimSize; i++)
         {
             float colorY = Mathf.InverseLerp(minY, maxY, vertices[i].y);
             colors[i] = LSPointPoleGradient.Evaluate(colorY);
         }
         
-        // update myMesh
+        // update mesh filter
         Mesh myMesh = _goPole.GetComponent<MeshFilter>().mesh;
         myMesh.Clear();
         myMesh.vertices = vertices;
         myMesh.triangles = triangles;
-        myMesh.colors = colors;
-        // myMesh.RecalculateNormals();
+        myMesh.colors = colors;  // may be in conflict with Shader Graph code >>>>>>>>>>
+        // myMesh.RecalculateNormals();  // may not be needed
+
+        // update mesh collider
+        // Mesh myCol = _goPole.GetComponent<MeshCollider>().mesh;  // not needed???
+    }
+
+    private void RefreshPointsAsPoleLine()
+    {
+        _goBall.SetActive(false);
+        _goPole.SetActive(true);
+        _goLSWorkshop.transform.Find("PoleHolder").gameObject.SetActive(true);
+
+        // create _LSDimSize vertices around a X-Z circle
+        Vector3[] vertices = new Vector3[_LSDimSize];
+
+        for (int i = 0; i < _LSDimSize; i++)
+        {
+            float posX = (float) Math.Cos(i * (2*Math.PI/_LSDimSize));
+            float posZ = (float) Math.Sin(i * (2*Math.PI/_LSDimSize));
+            vertices[i] = new Vector3(posX, _LSPointPos[i], posZ);
+
+            // create sphere for each vertex
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.transform.localScale = new Vector3(0.05f, 0.01f, 0.05f);
+            sphere.transform.position = vertices[i];
+
+            // color sphere based on posY value 
+            var ren = sphere.GetComponent<MeshRenderer>();
+            ren.material.SetColor("_Color", Color.red);
+
+            // merge close Pole spheres together, increasing size
+            // >>>>>>>>>>>>>> TBC
+        }
+        
+        // draws lines among vertices
+        LineRenderer lr = _goLine.GetComponent<LineRenderer>();
+        lr.enabled = true;
+        lr.material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+        lr.material.EnableKeyword("_EMISSION");
+        lr.startWidth = lr.endWidth = 0.01f;
+        lr.endColor = lr.startColor = Color.yellow;
+        lr.material.SetColor("_EmissionColor", lr.startColor);                    
+
+        lr.positionCount = vertices.Length;
+        lr.SetPositions(vertices);
+
+        // A simple 2 color gradient with a fixed alpha of 1.0f.
+        float alpha = 1.0f;
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(Color.blue, 0.0f), new GradientColorKey(Color.green, 1.0f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
+        );
+        lr.colorGradient = gradient;
+        
+
+        // set color of sphere based on  Colors array (instead of UV) for each vertex
+        // Color[] colors = new Color[vertices.Length];
+        // float minY = _LSPointPos.Min();
+        // float maxY = _LSPointPos.Max();
+        // // aveY = vertices.Average();
+        // for (int i = 0; i < _LSDimSize; i++)
+        // {
+        //     float colorY = Mathf.InverseLerp(minY, maxY, vertices[i].y);
+        //     colors[i] = LSPointPoleGradient.Evaluate(colorY);
+        // }
+        
 
     }
 
