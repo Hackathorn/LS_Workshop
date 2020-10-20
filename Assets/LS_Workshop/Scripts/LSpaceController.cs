@@ -31,8 +31,8 @@ public class LSpaceController : MonoBehaviour
 
 	// PlotScale scales LS mean/std value into World space for cube dimensions (1m, 10m...). 
 	// That cube contains the entire Latent Space.
-	private float _PlotScale = 10f;  // initial PlotScale for 100m world cube
-	public float PlotScale 
+	private static float _PlotScale = 10f;  // initial PlotScale for 100m world cube
+	public static float PlotScale 
 	{
 		get {return _PlotScale; }
 		// multiply LS values by PlotScale for World Space position & scale

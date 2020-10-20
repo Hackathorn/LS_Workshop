@@ -40,9 +40,7 @@ public class LSBlink3 : MonoBehaviour
             else if (!myRenderer.enabled && timeElapsed >= offDuration) 
             {
                 timeElapsed = 0;
-                GameObject _go = GameObject.Find("LSWorkshop");
-                LSpaceController _scr = _go.GetComponent<LSpaceController>();
-                transform.localScale = Vector3.one * _scr.PlotScale;
+                transform.localScale = Vector3.one * LSpaceController.PlotScale;
 
                 myRenderer.enabled = true;
             }

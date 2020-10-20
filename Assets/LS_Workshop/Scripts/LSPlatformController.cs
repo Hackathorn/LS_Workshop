@@ -6,113 +6,137 @@ using UnityEngine.UI;
 public class LSPlatformController : MonoBehaviour
 {
     public GameObject LSZeroAxes;
-    public Text XTextValue;
-    public Text YTextValue;
-    public Text ZTextValue;
+    public GameObject XPosText;
+    public GameObject YPosText;
+    public GameObject ZPosText;
+    public float maxTime;
+    public bool isSnapRot = true;
 
-    //ref: https://developer.oculus.com/documentation/unity/unity-ovrinput/
-    //ref: https://docs.unity3d.com/ScriptReference/Vector3.Lerp.html
-    //ref: 
-    public int totalFrames = 20;
-    [Tooltip("Number of frames to complete platform movement")]
-    // public float duration = 1.0f;
+    private float totalTime;
     private bool isLerping = false; 
-    private int currentFrame;
-    private Vector3 startPos, endPos;
+    // private int currentFrame;
+    private Vector3 deltaPos, startPos, endPos;
+    private float deltaAngle, startAngle, endAngle;
+    private Transform goCamera, goAxes; 
+    private Vector3[] axesPos = new [] 
+        { new Vector3(0f,0f,+1f), new Vector3(+1f,0f,0f), new Vector3(0f,0f,-1f), new Vector3(-1f,0f,0f)  };
+    private Text XPosTextUI, YPosTextUI, ZPosTextUI;    
+    private Transform PosTextCanvas;
 
+    /**************************************************************************/
+    // START -- subscribe to onPlotChange, plus setup transform links to Camera & Axes
     void Start() {
         LSpaceController.onPlotChange += RefreshAxes;
+
+        goCamera = transform.Find("OVRCameraRig");
+        if (goCamera == null) Debug.Log("ERROR: Can not find OVRCameraRig gameobject");
+        goAxes = transform.Find("LSCurrentAxes");
+        if (goAxes == null) Debug.Log("ERROR: Can not find LSCurrentAxes gameobject");
+
+        XPosTextUI = XPosText.GetComponent<Text>();
+        YPosTextUI = YPosText.GetComponent<Text>();
+        ZPosTextUI = ZPosText.GetComponent<Text>();
+        PosTextCanvas = XPosText.GetComponentInParent<Transform>(); // get canvas to flip Y rot
+
+        if (maxTime == 0f) maxTime = 0.5f;  // just-in-case it is not set in inspector
     }
     // Remove listener from onPlotChange when point is destroyed
     private void OnDisable() {
         LSpaceController.onPlotChange -= RefreshAxes;
     }
 
+    /**************************************************************************/
+    // UPDATE -- check for controller move and lerp, plus check for player rotation 
     void Update()
     {
-        if (!isLerping) {
-            // Debug.Log("Input???? Pos = " + transform.position);
-            Vector3 newDelta = Vector3.zero; 
+        if (!isLerping) {    // NO lerping so check for controller input
+            deltaPos = Vector3.zero; // initialize to zero delta position
+            deltaAngle = 0f;         // initialize to zero delta rotation
 
-            if(OVRInput.GetDown(OVRInput.Button.Three)) {           // return to Zero Axes
-                newDelta = -1f * transform.position + Vector3.left;
-            }
-            // if(OVRInput.GetDown(OVRInput.Button.Three)) {    // Button X
-            //     Debug.Log("BUTTON Three +1");
-            //     newDelta += new Vector3(0,+1,0); }
-            // if(OVRInput.GetDown(OVRInput.Button.Four)) {     // Button Y
-            //     Debug.Log("BUTTON Four -1");
-            //     newDelta += new Vector3(0,-1,0); }
+            // return platform to zero axes
+            if(OVRInput.GetDown(OVRInput.Button.Three)) {   
+                deltaPos = -1f * transform.position + Vector3.left;  } //????????? why Vector3.left?
 
+            // move platform forward-backward-up-down-left-right by one unit worldspace
+            // ...assuming that OVRCamera is facing +Z direction 
             if(OVRInput.Get(OVRInput.Button.PrimaryThumbstickUp)) { 
-                newDelta += new Vector3(+1,0,0); }
+                deltaPos = goCamera.forward; }  // forward 
             if(OVRInput.Get(OVRInput.Button.PrimaryThumbstickDown)) { 
-                newDelta += new Vector3(-1,0,0); }
+                deltaPos = -goCamera.forward; }  // backward 
             if(OVRInput.Get(OVRInput.Button.PrimaryThumbstickLeft)) { 
-                newDelta += new Vector3(0,0,+1); }
+                deltaPos = -goCamera.right; }  // left 
             if(OVRInput.Get(OVRInput.Button.PrimaryThumbstickRight)) { 
-                newDelta += new Vector3(0,0,-1); }
+                deltaPos = goCamera.right ; }  // right 
             if(OVRInput.Get(OVRInput.Button.SecondaryThumbstickUp)) { 
-                newDelta += new Vector3(0,+1,0); }
+                deltaPos = goCamera.up ; }  // up 
             if(OVRInput.Get(OVRInput.Button.SecondaryThumbstickDown)) { 
-                newDelta += new Vector3(0,-1,0); }
+                deltaPos = -goCamera.up ; }  // down 
 
-            // Vector2 input2D = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
-            // if(OVRInput.Get(OVRInput.Button.PrimaryThumbstick)) {  // thumbstick pressed => Y-axis Up/Down 
-            //     if (input2D.x > 0.5f) {
-            //         newDelta += new Vector3(0,+1,0); }
-            //     if (input2D.x < 0.5f) {
-            //         newDelta += new Vector3(0,-1,0); }
-            // }
-            // else {                                                 // X+Z axises => Forward/Back/Left/Right
-            //     if (input2D.x > 0.5f) {
-            //         newDelta += new Vector3(+1,0,0); }  // forward +X
-            //     if (input2D.x < 0.5f) {
-            //         newDelta += new Vector3(-1,0,0); }  // back -X
-            //     if (input2D.y > 0.5f) {
-            //         newDelta += new Vector3(0,0,+1); }  // left +Z
-            //     if (input2D.y < 0.5f) {
-            //         newDelta += new Vector3(0,0,-1); }  // right -Z
-            // }
-            
-            if (newDelta != Vector3.zero) {     //start LERPing cycles
-                // Debug.Log("LERPing started " + newDelta);
+            if (deltaPos != Vector3.zero) {  //got a delta position, so start LERPing cycles
                 isLerping = true;
-                currentFrame = 0;
+                totalTime = 0f; 
                 startPos = transform.position;
-                endPos = startPos + newDelta;
+                endPos = startPos + deltaPos; 
+                // Debug.Log("LERPing Pos started.... " + deltaPos + " startPos= " + startPos + " endPos= " + endPos);
+            }
+
+            // snap rotate player (OVRCameraRig) by 90 deg to right
+            else if(OVRInput.GetDown(OVRInput.Button.One)) 
+            {   
+                deltaAngle = 90f;   // look right
+                isLerping = true;
+                totalTime = 0f; 
+                startAngle = Mathf.Round(goCamera.transform.rotation.eulerAngles.y);
+                endAngle = startAngle + deltaAngle; 
+                if (endAngle >= 360f) endAngle = 0f;
+
+                if (isSnapRot) {        // do camera rotation instantly
+                    goCamera.transform.rotation = Quaternion.Euler(0, endAngle, 0);
+                    isLerping = false;  // no lerping needed
+                }
+
+                // move platform zero axes to proper side
+                int i = (int) (endAngle / 90f);
+                goAxes.transform.localPosition = axesPos[i];
+                // Debug.Log("LERPing Rot started.... " + "startAngle= " + startAngle + " endAngle= " + endAngle + " i= " + i);
             }
         }
-        else {  // within LERPing cycle
-            currentFrame += 1;
-            float pctComplete = (float)currentFrame / (float)totalFrames;
-            this.transform.position = Vector3.Lerp(startPos, endPos, pctComplete);
-            // Debug.Log("LERP cycle " + currentFrame + " with " + transform.position);
-            if (currentFrame >= totalFrames) {
+        else   // continuing the LERPing cycle
+        {  
+            totalTime += Time.deltaTime; 
+            float pctComplete = totalTime / maxTime;
+
+            if (deltaAngle == 0f) {  // Pos Lerp
+                this.transform.position = Vector3.Lerp(startPos, endPos, pctComplete);
+            } 
+            else {                   // Rot Lerp (if not SNAP rotation)
+                float angle = Mathf.LerpAngle(startAngle, endAngle, pctComplete);
+                goCamera.transform.rotation = Quaternion.Euler(0, angle, 0);
+            }
+
+            if (pctComplete > 1f) {  // done lerping?
                 isLerping = false;
                 }
-            }
-        
-        // update X-Y-Z position texts 
-        GameObject _go = GameObject.Find("LSWorkshop");
-        LSpaceController _scr = _go.GetComponent<LSpaceController>();
-        float _PlotScale = _scr.PlotScale;
-
-        Vector3 pos = transform.position;
-        XTextValue.text = "X  " + ((pos.x + 1) / _PlotScale).ToString("F5");  // adjust X to front of platform
-        YTextValue.text = "Y  " + (pos.y  / _PlotScale).ToString("F5");
-        ZTextValue.text = "Z  " + (pos.z  / _PlotScale).ToString("F5");
+        }
+        // Update the position data in the X-Y-Z text fields
+        string format = "+0.0000;-0.0000";
+        Vector3 pos = this.transform.position;
+        XPosTextUI.text = "X  " + (pos.x  / LSpaceController.PlotScale).ToString(format); 
+        YPosTextUI.text = "Y  " + (pos.y  / LSpaceController.PlotScale).ToString(format);
+        ZPosTextUI.text = "Z  " + (pos.z  / LSpaceController.PlotScale).ToString(format);
+        // also rotate ZeroCanvas toward player
+        XPosText.transform.parent.transform.rotation = Quaternion.Euler(0, endAngle, 0);
 
     }
-
-    // Refresh this point by getting current plot parms and setting pos & scale
+    /*************************************************************************/
+    // when onPlotChange, then reset scale for platform axes 
     private void RefreshAxes()
     {
         // find public parameters in LSpaceController
-        GameObject _go = GameObject.Find("LSWorkshop");
-        LSpaceController _scr = _go.GetComponent<LSpaceController>();
+        // GameObject _go = GameObject.Find("LSWorkshop");
+        // LSpaceController _scr = _go.GetComponent<LSpaceController>();
         // Debug.Log("REFRESH AXES PlotScale = " + _scr.PlotScale);
-        LSZeroAxes.transform.localScale = Vector3.one * _scr.PlotScale / 10f;
-    }
 
+        LSZeroAxes.transform.localScale = Vector3.one * LSpaceController.PlotScale / 10f;
+    }
 }

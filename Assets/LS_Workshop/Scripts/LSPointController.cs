@@ -80,7 +80,7 @@ public class LSPointController : MonoBehaviour
         LSpaceController _scr = _goLSWorkshop.GetComponent<LSpaceController>();
 
         // set current params for this point
-        _plotScale = _scr.PlotScale;
+        _plotScale = LSpaceController.PlotScale;
         _isBall = _scr.isBall;
         _isNewYCompared = _scr.isNewYCompared;
         _isImageShown = _scr.isImageShown;
