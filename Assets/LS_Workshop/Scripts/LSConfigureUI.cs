@@ -12,12 +12,16 @@ public class LSConfigureUI : MonoBehaviour
     public Material[] skyBoxes; 
     [Tooltip ("UI content panels for Space, Dimension, Move, Cluster")]
     public GameObject[] contentPanels; // Content panels under CanvasWithDebug: 0=Space, 3=Dim, 4=Move, 5=Cluster
+
+    private LSpaceController _lspace;
     bool inMenu;
     private Text sliderText;
     private int panel = DebugUIBuilder.DEBUG_PANE_CENTER; // display UI in the Center, Left or Right panels
 
 	void Start ()
     {
+        _lspace = GameObject.Find("LSWorkshop").GetComponent<LSpaceController>(); // set ref to LSpaceController vars
+
         panel = DebugUIBuilder.DEBUG_PANE_LEFT;  // 2 - Content Left
         DebugUIBuilder.instance.AddLabel("Choose Menu...", panel);
         DebugUIBuilder.instance.AddButton("Space", SpaceButtonPressed, panel);
@@ -104,11 +108,11 @@ public class LSConfigureUI : MonoBehaviour
         // Set current baseX, baseZ, vertY
         GameObject _go = GameObject.Find("LSWorkshop");
         LSpaceController _scr = _go.GetComponent<LSpaceController>();
-        _baseX = _scr.baseX;
-        _baseZ = _scr.baseZ;
-        _vertY = _scr.vertY;
-        _newY  = _scr.newY;    // not updated in LSpaceController until Compare
-        _dimSize = _scr._LSDimSize;          
+        _baseX = _lspace.baseX;
+        _baseZ = _lspace.baseZ;
+        _vertY = _lspace.vertY;
+        _newY  = _lspace.newY;    // not updated in LSpaceController until Compare
+        _dimSize = _lspace._LSDimSize;          
 
         Transform panelTransform = contentPanels[1].transform;
         foreach (Transform child in panelTransform)               // find Text in Dim panel objects
@@ -144,7 +148,7 @@ public class LSConfigureUI : MonoBehaviour
                                 s = "newY=NONE";
                             }
                             _textComponent.text = s;
-                            _scr.newY = _newY;   // update newY in LSpaceController
+                            _lspace.newY = _newY;   // update newY in LSpaceController
                             // set Compare toggle to OFF >>>>>>>>>>>>>>>>>>> TBC
                             break;
                         }
@@ -192,12 +196,10 @@ public class LSConfigureUI : MonoBehaviour
         if (group == "group1" && t.isOn) // Ball in 3-dim OR Pole Mesh in N-dim
         {
             // change bool isBall in LSWorkshop Controller
-            GameObject _go = GameObject.Find("LSWorkshop");
-            LSpaceController _scr = _go.GetComponent<LSpaceController>();
             if (radioLabel == "Ball") 
-                _scr.isBall = true; 
+                _lspace.isBall = true; 
             else 
-                _scr.isBall = false;
+                _lspace.isBall = false;
         }
 
         if (group == "group2" && t.isOn) // Scale = 1m, 10m, 100m, 1km as string "0" ... "3"
@@ -205,7 +207,7 @@ public class LSConfigureUI : MonoBehaviour
             // change PlotScale in LSWorkshop Controller
             GameObject _go = GameObject.Find("LSWorkshop");
             LSpaceController _scr = _go.GetComponent<LSpaceController>();
-             _scr.PlotScale = float.Parse(radioLabel);
+            LSpaceController.PlotScale = float.Parse(radioLabel);
         }
 
         if (group == "group3" && t.isOn) // Skybox = None, Default, Clouds, Box as "0" ... "3"
@@ -224,7 +226,7 @@ public class LSConfigureUI : MonoBehaviour
         // Set isImageShown bool in LSWorkshop Controller to refresh all points
         GameObject _go = GameObject.Find("LSWorkshop");
         LSpaceController _scr = _go.GetComponent<LSpaceController>();
-        _scr.isNewYCompared = t.isOn;
+        _lspace.isNewYCompared = t.isOn;
     }
 
     public void ShowImagePressed(Toggle t)
@@ -232,7 +234,7 @@ public class LSConfigureUI : MonoBehaviour
         // Set isImageShown bool in LSWorkshop Controller to refresh all points
         GameObject _go = GameObject.Find("LSWorkshop");
         LSpaceController _scr = _go.GetComponent<LSpaceController>();
-        _scr.isImageShown = t.isOn;
+        _lspace.isImageShown = t.isOn;
     }
 
     public void SliderPressed(float f)
